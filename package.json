@@ -1,0 +1,67 @@
+{
+  "name": "libp2p-webrtc-direct",
+  "version": "0.0.0",
+  "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
+  "main": "src/index.js",
+  "browser": {
+    "wrtc": false,
+    "http": false,
+    "request": "xhr"
+  },
+  "scripts": {
+    "lint": "gulp lint",
+    "build": "gulp build",
+    "test": "gulp test",
+    "test:node": "gulp test:node",
+    "test:browser": "gulp test:browser",
+    "release": "gulp release",
+    "release-minor": "gulp release --type minor",
+    "release-major": "gulp release --type major",
+    "coverage": "gulp coverage",
+    "coverage-publish": "aegir-coverage publish"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/libp2p/js-libp2p-webrtc-direct.git"
+  },
+  "keywords": [
+    "libp2p",
+    "webrtc",
+    "dial",
+    "stream",
+    "connection",
+    "woot",
+    "woot"
+  ],
+  "author": "David Dias <daviddias@ipfs.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/libp2p/js-libp2p-webrtc-direct/issues"
+  },
+  "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
+  "devDependencies": {
+    "aegir": "^9.3.0",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "pre-commit": "^1.2.2",
+    "webrtcsupport": "^2.2.0"
+  },
+  "dependencies": {
+    "concat-stream": "^1.6.0",
+    "detect-node": "^2.0.3",
+    "interface-connection": "^0.3.0",
+    "mafmt": "^2.1.5",
+    "multiaddr": "^2.1.3",
+    "multibase": "^0.3.0",
+    "once": "^1.4.0",
+    "request": "^2.79.0",
+    "simple-peer": "6.1.0",
+    "stream-to-pull-stream": "^1.7.2",
+    "wrtc": "0.0.61",
+    "xhr": "^2.3.3"
+  }
+}
