@@ -1,6 +1,6 @@
 {
   "name": "libp2p-webrtc-direct",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
   "main": "src/index.js",
   "browser": {
