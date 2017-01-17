@@ -7,7 +7,7 @@ const pull = require('pull-stream')
 
 const WebRTCDirect = require('../src')
 
-describe('valid Connection', () => {
+describe.skip('valid Connection', () => {
   const ma = multiaddr('/libp2p-webrtc-direct/ip4/127.0.0.1/tcp/12345/http')
   let wd
   let conn
