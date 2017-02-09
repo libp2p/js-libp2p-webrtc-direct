@@ -55,7 +55,7 @@
     "detect-node": "^2.0.3",
     "interface-connection": "^0.3.0",
     "mafmt": "^2.1.5",
-    "multiaddr": "^2.1.3",
+    "multiaddr": "2.2.0",
     "multibase": "^0.3.0",
     "once": "^1.4.0",
     "request": "^2.79.0",
