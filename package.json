@@ -4,9 +4,7 @@
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
   "main": "src/index.js",
   "browser": {
-    "wrtc": false,
-    "http": false,
-    "request": "xhr"
+    "./src/index.js": "./src/browser.js"
   },
   "scripts": {
     "lint": "gulp lint",
@@ -47,8 +45,7 @@
     "aegir": "^10.0.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
-    "pre-commit": "^1.2.2",
-    "webrtcsupport": "^2.2.0"
+    "pre-commit": "^1.2.2"
   },
   "dependencies": {
     "concat-stream": "^1.6.0",
