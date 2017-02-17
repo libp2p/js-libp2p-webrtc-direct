@@ -62,7 +62,7 @@
     "simple-peer": "6.2.2",
     "stream-to-pull-stream": "^1.7.2",
     "wrtc": "0.0.61",
-    "xhr": "^2.3.3"
+    "xhr": "2.3.3"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>"
