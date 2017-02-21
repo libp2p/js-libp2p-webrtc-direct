@@ -59,7 +59,7 @@
     "multibase": "~0.3.1",
     "once": "^1.4.0",
     "request": "^2.79.0",
-    "simple-peer": "6.2.2",
+    "simple-peer": "6.4.3",
     "stream-to-pull-stream": "^1.7.2",
     "wrtc": "0.0.61",
     "xhr": "^2.3.3"
