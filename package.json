@@ -49,14 +49,14 @@
     "dirty-chai": "^2.0.1",
     "gulp": "^3.9.1",
     "pre-commit": "^1.2.2",
-    "webrtcsupport": "^2.2.0"
+    "webrtcsupport": "^2.2.0",
+    "multiaddr": "^3.0.0"
   },
   "dependencies": {
     "concat-stream": "^1.6.0",
     "detect-node": "^2.0.3",
     "interface-connection": "~0.3.2",
     "mafmt": "^3.0.0",
-    "multiaddr": "^3.0.0",
     "multibase": "~0.3.4",
     "once": "^1.4.0",
     "request": "^2.81.0",

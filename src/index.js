@@ -9,7 +9,6 @@ const Connection = require('interface-connection').Connection
 const EE = require('events').EventEmitter
 const mafmt = require('mafmt')
 const multibase = require('multibase')
-const multiaddr = require('multiaddr')
 const once = require('once')
 const request = require('request')
 
