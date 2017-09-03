@@ -11,12 +11,12 @@
   "scripts": {
     "lint": "gulp lint",
     "build": "gulp build",
-    "test": "gulp test",
+    "test": "gulp test --dom",
     "test:node": "gulp test:node",
-    "test:browser": "gulp test:browser",
-    "release": "gulp release",
-    "release-minor": "gulp release --type minor",
-    "release-major": "gulp release --type major",
+    "test:browser": "gulp test:browser --dom",
+    "release": "gulp release --dom",
+    "release-minor": "gulp release --type minor --dom",
+    "release-major": "gulp release --type major --dom",
     "coverage": "gulp coverage",
     "coverage-publish": "aegir-coverage publish"
   },
@@ -44,25 +44,26 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
   "devDependencies": {
-    "aegir": "^10.0.0",
-    "chai": "^3.5.0",
+    "aegir": "^11.0.2",
+    "chai": "^4.1.2",
+    "dirty-chai": "^2.0.1",
     "gulp": "^3.9.1",
     "pre-commit": "^1.2.2",
-    "webrtcsupport": "^2.2.0"
+    "webrtcsupport": "^2.2.0",
+    "multiaddr": "^3.0.0"
   },
   "dependencies": {
     "concat-stream": "^1.6.0",
     "detect-node": "^2.0.3",
-    "interface-connection": "~0.3.0",
-    "mafmt": "^2.1.6",
-    "multiaddr": "^2.2.1",
-    "multibase": "~0.3.1",
+    "interface-connection": "~0.3.2",
+    "mafmt": "^3.0.0",
+    "multibase": "~0.3.4",
     "once": "^1.4.0",
-    "request": "^2.79.0",
-    "simple-peer": "6.2.2",
+    "request": "^2.81.0",
+    "simple-peer": "8.1.1",
     "stream-to-pull-stream": "^1.7.2",
-    "wrtc": "0.0.61",
-    "xhr": "^2.3.3"
+    "wrtc": "0.0.62",
+    "xhr": "^2.4.0"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>"

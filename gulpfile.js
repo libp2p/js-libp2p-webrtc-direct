@@ -10,7 +10,7 @@ gulp.task('test:node:after', shutdown)
 gulp.task('test:browser:before', boot)
 gulp.task('test:browser:after', shutdown)
 
-const ma = multiaddr('/libp2p-webrtc-direct/ip4/127.0.0.1/tcp/12345/http')
+const ma = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
 let listener
 
 function boot (done) {
