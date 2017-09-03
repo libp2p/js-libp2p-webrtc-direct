@@ -13,6 +13,12 @@ const multiaddr = require('multiaddr')
 const once = require('once')
 const request = require('request')
 
+function noop () {}
+
+function cleanMultiaddr (ma) {
+  return ma.decapsulate('/p2p-webrtc-direct')
+}
+
 class WebRTCDirect {
   dial (ma, options, callback) {
     if (typeof options === 'function') {
@@ -40,7 +46,7 @@ class WebRTCDirect {
       const signalStr = JSON.stringify(signal)
       const cma = cleanMultiaddr(ma)
       const url = 'http://' + cma.toOptions().host + ':' + cma.toOptions().port
-      const path = '/?signal=' + multibase.encode('base58btc', new Buffer(signalStr))
+      const path = '/?signal=' + multibase.encode('base58btc', Buffer.from(signalStr))
       const uri = url + path
 
       request.get(uri, (err, res) => {
@@ -52,28 +58,6 @@ class WebRTCDirect {
         const incSignal = JSON.parse(incSignalStr)
         channel.signal(incSignal)
       })
-
-      /* Using stream-http
-      const reqOptions = cma.toOptions()
-      reqOptions.method = 'GET'
-      reqOptions.path = '/?signal=' + multibase.encode('base58btc', new Buffer(signalStr))
-      // console.log(reqOptions)
-
-      const req = http.request(reqOptions)
-
-      req.on('response', (res) => {
-        res.once('error', callback)
-        res.pipe(concat((data) => {
-          const incSignalBuf = multibase.decode(data)
-          const incSignalStr = incSignalBuf.toString()
-          const incSignal = JSON.parse(incSignalStr)
-          channel.signal(incSignal)
-        }))
-      })
-
-      req.once('error', callback)
-      req.end()
-      */
     })
 
     channel.on('connect', () => {
@@ -113,7 +97,7 @@ class WebRTCDirect {
 
       const path = req.url
       const incSignalStr = path.split('?signal=')[1]
-      const incSignalBuf = multibase.decode(new Buffer(incSignalStr))
+      const incSignalBuf = multibase.decode(Buffer.from(incSignalStr))
       const incSignal = JSON.parse(incSignalBuf.toString())
 
       const options = {
@@ -135,7 +119,7 @@ class WebRTCDirect {
 
       channel.on('signal', (signal) => {
         const signalStr = JSON.stringify(signal)
-        const signalEncoded = multibase.encode('base58btc', new Buffer(signalStr))
+        const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
         res.end(signalEncoded.toString())
       })
 
@@ -189,9 +173,3 @@ class WebRTCDirect {
 }
 
 module.exports = WebRTCDirect
-
-function noop () {}
-
-function cleanMultiaddr (ma) {
-  return multiaddr(ma.toString().split('/').slice(2).join('/'))
-}

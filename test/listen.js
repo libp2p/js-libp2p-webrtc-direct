@@ -2,14 +2,17 @@
 
 'use strict'
 
-const expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const WebRTCDirect = require('../src')
 
 describe('listen', () => {
   let wd
 
-  const ma = multiaddr('/libp2p-webrtc-direct/ip4/127.0.0.1/tcp/20123/http')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
 
   before(() => {
     wd = new WebRTCDirect()
@@ -19,7 +22,7 @@ describe('listen', () => {
     const listener = wd.createListener((conn) => {})
 
     listener.listen(ma, (err) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       listener.close(done)
     })
   })
@@ -36,7 +39,7 @@ describe('listen', () => {
   it('listen, check for the close event', (done) => {
     const listener = wd.createListener((conn) => {})
     listener.listen(ma, (err) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       listener.once('close', done)
       listener.close()
     })
@@ -61,9 +64,9 @@ describe('listen', () => {
   it('getAddrs', (done) => {
     const listener = wd.createListener((conn) => {})
     listener.listen(ma, (err) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       listener.getAddrs((err, addrs) => {
-        expect(err).to.not.exist
+        expect(err).to.not.exist()
         expect(addrs[0]).to.deep.equal(ma)
         listener.close(done)
       })

@@ -1,14 +1,18 @@
 /* eslint-env mocha */
 'use strict'
 
-const expect = require('chai').expect
+const chai = require('chai')
+const dirtyChai = require('dirty-chai')
+const expect = chai.expect
+chai.use(dirtyChai)
+
 const multiaddr = require('multiaddr')
 const pull = require('pull-stream')
 
 const WebRTCDirect = require('../src')
 
 describe('valid Connection', () => {
-  const ma = multiaddr('/libp2p-webrtc-direct/ip4/127.0.0.1/tcp/12345/http')
+  const ma = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
   let wd
   let conn
 
@@ -16,7 +20,7 @@ describe('valid Connection', () => {
     wd = new WebRTCDirect()
 
     wd.dial(ma, (err, _conn) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       conn = _conn
       done()
     })
@@ -32,7 +36,7 @@ describe('valid Connection', () => {
 
   it('get observed addrs', (done) => {
     conn.getObservedAddrs((err, addrs) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       expect(addrs[0].toString()).to.equal(ma.toString())
       done()
     })
@@ -40,7 +44,7 @@ describe('valid Connection', () => {
 
   it('get Peer Info', (done) => {
     conn.getPeerInfo((err, peerInfo) => {
-      expect(err).to.exist
+      expect(err).to.exist()
       done()
     })
   })
@@ -48,10 +52,9 @@ describe('valid Connection', () => {
   it('set Peer Info', (done) => {
     conn.setPeerInfo('info')
     conn.getPeerInfo((err, peerInfo) => {
-      expect(err).to.not.exist
+      expect(err).to.not.exist()
       expect(peerInfo).to.equal('info')
       done()
     })
   })
 })
-
