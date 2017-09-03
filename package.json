@@ -66,6 +66,7 @@
     "xhr": "^2.4.0"
   },
   "contributors": [
-    "David Dias <daviddias.p@gmail.com>"
+    "David Dias <daviddias.p@gmail.com>",
+    "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>"
   ]
 }
