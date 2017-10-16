@@ -165,7 +165,12 @@ class WebRTCDirect {
     if (!Array.isArray(multiaddrs)) {
       multiaddrs = [multiaddrs]
     }
+
     return multiaddrs.filter((ma) => {
+      if (ma.protoNames().indexOf('p2p-circuit') > -1) {
+        return false
+      }
+
       return mafmt.WebRTCDirect.matches(ma)
     })
   }
