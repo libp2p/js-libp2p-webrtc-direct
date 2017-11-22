@@ -62,7 +62,7 @@
     "request": "^2.81.0",
     "simple-peer": "8.1.1",
     "stream-to-pull-stream": "^1.7.2",
-    "wrtc": "0.0.62",
+    "wrtc": "0.0.63",
     "xhr": "^2.4.0"
   },
   "contributors": [
