@@ -11,6 +11,7 @@ const mafmt = require('mafmt')
 const multibase = require('multibase')
 const once = require('once')
 const request = require('request')
+const withIs = require('class-is')
 
 function noop () {}
 
@@ -176,4 +177,4 @@ class WebRTCDirect {
   }
 }
 
-module.exports = WebRTCDirect
+module.exports = withIs(WebRTCDirect, { className: 'WebRTCDirect', symbolName: '@libp2p/js-libp2p-webrtc-direct/webrtcdirect' })
