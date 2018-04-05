@@ -44,27 +44,27 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
   "devDependencies": {
-    "aegir": "^12.0.8",
+    "aegir": "^13.0.6",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "gulp": "^3.9.1",
-    "multiaddr": "^3.0.0",
+    "multiaddr": "^4.0.0",
     "pre-commit": "^1.2.2",
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
-    "class-is": "^1.0.0",
-    "concat-stream": "^1.6.0",
+    "class-is": "^1.1.0",
+    "concat-stream": "^1.6.2",
     "detect-node": "^2.0.3",
     "interface-connection": "~0.3.2",
-    "mafmt": "^3.0.1",
-    "multibase": "~0.3.4",
+    "mafmt": "^6.0.0",
+    "multibase": "~0.4.0",
     "once": "^1.4.0",
-    "request": "^2.81.0",
-    "simple-peer": "8.1.1",
+    "request": "^2.85.0",
+    "simple-peer": "9.0.0",
     "stream-to-pull-stream": "^1.7.2",
-    "wrtc": "0.0.63",
-    "xhr": "^2.4.0"
+    "wrtc": "0.1.1",
+    "xhr": "^2.4.1"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>",
