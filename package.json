@@ -2,6 +2,7 @@
   "name": "libp2p-webrtc-direct",
   "version": "0.3.0",
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
+  "leadMaintainer": "Vasco Santos <vasco.santos@moxy.studio>",
   "main": "src/index.js",
   "browser": {
     "wrtc": false,
@@ -20,7 +21,7 @@
     "coverage": "aegir coverage",
     "coverage-publish": "aegir coverage --provider coveralls"
   },
-  "pre-commit": [
+  "pre-push": [
     "lint",
     "test"
   ],
@@ -37,7 +38,6 @@
     "woot",
     "woot"
   ],
-  "author": "David Dias <daviddias@ipfs.io>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/libp2p/js-libp2p-webrtc-direct/issues"
@@ -49,7 +49,6 @@
     "dirty-chai": "^2.0.1",
     "gulp": "^3.9.1",
     "multiaddr": "^4.0.0",
-    "pre-commit": "^1.2.2",
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
