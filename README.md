@@ -20,25 +20,83 @@
 
 [Vasco Santos](https://github.com/vasco-santos).
 
-## Example
+## Table of Contents
 
-```JavaScript
-TODO
-```
+- [Install](#install)
+  - [npm](#npm)
+- [Usage](#usage)
+- [API](#api)
+- [Pull-streams](#pull-streams)
 
-## Usage
 
-### Installation
+## Install
+
+### npm
 
 ```bash
 > npm install libp2p-webrtc-direct
 ```
 
-### API
+## Usage
+
+```js
+const WebRTCDirect = require('libp2p-webrtc-direct')
+const multiaddr = require('multiaddr')
+const pull = require('pull-stream')
+
+const mh = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+
+const webRTCDirect = new WebRTCDirect()
+
+const listener = webRTCDirect.createListener((socket) => {
+  console.log('new connection opened')
+  pull(
+    pull.values(['hello']),
+    socket
+  )
+})
+
+listener.listen(mh, () => {
+  console.log('listening')
+
+  webRTCDirect.dial(mh, (err, conn) => {
+    if (!err) {
+      pull(
+        conn,
+        pull.collect((err, values) => {
+          if (!err) {
+            console.log(`Value: ${values.toString()}`)
+          } else {
+            console.log(`Error: ${err}`)
+          }
+          
+          // Close connection after reading
+          listener.close()
+        }),
+      )
+    } else {
+      console.log(`Error: ${err}`)
+    }
+  })
+})
+```
+
+Outputs:
+
+```sh
+listening
+new connection opened
+Value: hello
+```
+Note that it may take some time for the connection to be established.
+
+## API
 
 Follows the interface defined by `interface-transport`
 
 [![](https://raw.githubusercontent.com/diasdavid/interface-transport/master/img/badge.png)](https://github.com/libp2p/interface-transport)
+
+## Pull-streams
 
 ### This module uses `pull-streams`
 
