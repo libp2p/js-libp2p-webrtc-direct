@@ -1,3 +1,13 @@
+<a name="0.3.1"></a>
+## [0.3.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.3.0...v0.3.1) (2018-09-26)
+
+
+### Bug Fixes
+
+* options no longer ignored in createListener ([#23](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/23)) ([6dd29ed](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/6dd29ed))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.2.0...v0.3.0) (2018-04-05)
 
