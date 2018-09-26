@@ -100,9 +100,9 @@ class WebRTCDirect {
       const incSignalBuf = multibase.decode(Buffer.from(incSignalStr))
       const incSignal = JSON.parse(incSignalBuf.toString())
 
-      const options = {
+      Object.assign(options, {
         trickle: false
-      }
+      })
 
       if (isNode) {
         options.wrtc = wrtc
