@@ -54,16 +54,16 @@
   "dependencies": {
     "class-is": "^1.1.0",
     "concat-stream": "^1.6.2",
-    "detect-node": "^2.0.3",
+    "detect-node": "^2.0.4",
     "interface-connection": "~0.3.2",
-    "mafmt": "^6.0.0",
-    "multibase": "~0.4.0",
+    "mafmt": "^6.0.2",
+    "multibase": "~0.5.0",
     "once": "^1.4.0",
-    "request": "^2.85.0",
-    "simple-peer": "9.0.0",
+    "request": "^2.88.0",
+    "simple-peer": "9.1.2",
     "stream-to-pull-stream": "^1.7.2",
-    "wrtc": "0.1.1",
-    "xhr": "^2.4.1"
+    "wrtc": "~0.2.1",
+    "xhr": "^2.5.0"
   },
   "contributors": [
     "David Dias <daviddias.p@gmail.com>",
