@@ -19,7 +19,7 @@ describe('listen', () => {
   })
 
   it('listen, check for callback', (done) => {
-    const listener = wd.createListener((conn) => {})
+    const listener = wd.createListener({ config: {} }, (conn) => {})
 
     listener.listen(ma, (err) => {
       expect(err).to.not.exist()
@@ -28,7 +28,7 @@ describe('listen', () => {
   })
 
   it('listen, check for listening event', (done) => {
-    const listener = wd.createListener((conn) => {})
+    const listener = wd.createListener({ config: {} }, (conn) => {})
 
     listener.once('listening', () => {
       listener.close(done)
@@ -37,7 +37,7 @@ describe('listen', () => {
   })
 
   it('listen, check for the close event', (done) => {
-    const listener = wd.createListener((conn) => {})
+    const listener = wd.createListener({ config: {} }, (conn) => {})
     listener.listen(ma, (err) => {
       expect(err).to.not.exist()
       listener.once('close', done)
@@ -62,7 +62,7 @@ describe('listen', () => {
   })
 
   it('getAddrs', (done) => {
-    const listener = wd.createListener((conn) => {})
+    const listener = wd.createListener({ config: {} }, (conn) => {})
     listener.listen(ma, (err) => {
       expect(err).to.not.exist()
       listener.getAddrs((err, addrs) => {

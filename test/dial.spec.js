@@ -21,7 +21,7 @@ describe('dial', () => {
   })
 
   it('dial on IPv4, check callback', (done) => {
-    wd.dial(ma, (err, conn) => {
+    wd.dial(ma, { config: {} }, (err, conn) => {
       expect(err).to.not.exist()
 
       const data = Buffer.from('some data')
@@ -41,7 +41,7 @@ describe('dial', () => {
   it('dial offline / non-existent node on IPv4, check callback', (done) => {
     let maOffline = multiaddr('/ip4/127.0.0.1/tcp/55555/http/p2p-webrtc-direct')
 
-    wd.dial(maOffline, (err, conn) => {
+    wd.dial(maOffline, { config: {} }, (err, conn) => {
       expect(err).to.exist()
       done()
     })
