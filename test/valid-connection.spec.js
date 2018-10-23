@@ -19,7 +19,7 @@ describe('valid Connection', () => {
   before((done) => {
     wd = new WebRTCDirect()
 
-    wd.dial(ma, (err, _conn) => {
+    wd.dial(ma, { config: {} }, (err, _conn) => {
       expect(err).to.not.exist()
       conn = _conn
       done()
