@@ -12,7 +12,9 @@ const pull = require('pull-stream')
 
 const WebRTCDirect = require('../src')
 
-describe('dial', () => {
+describe('dial', function () {
+  this.timeout(20 * 1000)
+
   const ma = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
   let wd
 
