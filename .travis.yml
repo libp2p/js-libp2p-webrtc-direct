@@ -7,6 +7,7 @@ stages:
 
 node_js:
   - '10'
+  - '12'
 
 os:
   - linux
@@ -17,18 +18,25 @@ after_success: npx nyc report --reporter=text-lcov > coverage.lcov && npx codeco
 
 jobs:
   include:
+    - os: windows
+      cache: false
+
     - stage: check
       script:
-        - npx aegir commitlint --travis
-        - npx aegir dep-check -- -i wrtc -i electron-webrtc
+        - npx aegir dep-check
         - npm run lint
 
     - stage: test
       name: chrome
       addons:
         chrome: stable
-      script:
-        - npx aegir test -t browser
+      script: npx aegir test -t browser -t webworker
+
+    - stage: test
+      name: firefox
+      addons:
+        firefox: latest
+      script: npx aegir test -t browser -t webworker -- --browsers FirefoxHeadless
 
 notifications:
   email: false
