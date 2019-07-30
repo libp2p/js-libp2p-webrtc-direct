@@ -12,7 +12,7 @@ function boot (done) {
   listener = wd.createListener((conn) => pull(conn, conn))
   listener.listen(ma, done)
   listener.on('listening', () => {
-    console.log('gulp listener started on:', ma.toString())
+    console.log('listener started on:', ma.toString())
   })
 }
 
