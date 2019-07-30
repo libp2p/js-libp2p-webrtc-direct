@@ -7,6 +7,7 @@ const http = require('http')
 const toPull = require('stream-to-pull-stream')
 const Connection = require('interface-connection').Connection
 const EE = require('events').EventEmitter
+const multiaddr = require('multiaddr')
 const mafmt = require('mafmt')
 const multibase = require('multibase')
 const once = require('once')
@@ -128,7 +129,7 @@ class WebRTCDirect {
 
     listener.listen = (ma, callback) => {
       callback = callback || noop
-
+      console.log('listen', ma.toString())
       maSelf = ma
       server.on('listening', () => {
         listener.emit('listening')
@@ -170,6 +171,11 @@ class WebRTCDirect {
     return multiaddrs.filter((ma) => {
       if (ma.protoNames().indexOf('p2p-circuit') > -1) {
         return false
+      }
+
+      // If the /p2p (421) proto name is included, get rid of it
+      if (ma.protoCodes().includes(421)) {
+        ma = ma.decapsulate(multiaddr.protocols.codes[421].name)
       }
 
       return mafmt.WebRTCDirect.matches(ma)
