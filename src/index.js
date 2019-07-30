@@ -129,7 +129,7 @@ class WebRTCDirect {
 
     listener.listen = (ma, callback) => {
       callback = callback || noop
-      console.log('listen', ma.toString())
+
       maSelf = ma
       server.on('listening', () => {
         listener.emit('listening')
