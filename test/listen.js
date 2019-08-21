@@ -9,38 +9,42 @@ chai.use(dirtyChai)
 const multiaddr = require('multiaddr')
 const WebRTCDirect = require('../src')
 
+const mockUpgrader = {
+  upgradeInbound: maConn => maConn,
+  upgradeOutbound: maConn => maConn
+}
+
 describe('listen', () => {
   let wd
 
   const ma = multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
 
   before(() => {
-    wd = new WebRTCDirect()
+    wd = new WebRTCDirect({ upgrader: mockUpgrader })
   })
 
-  it('listen, check for callback', (done) => {
-    const listener = wd.createListener({ config: {} }, (conn) => {})
+  it('listen, check for promise', async () => {
+    const listener = wd.createListener({ config: {} }, (_) => { })
 
-    listener.listen(ma, (err) => {
-      expect(err).to.not.exist()
-      listener.close(done)
-    })
+    await listener.listen(ma)
+    await listener.close()
   })
 
   it('listen, check for listening event', (done) => {
     const listener = wd.createListener({ config: {} }, (conn) => {})
 
-    listener.once('listening', () => {
-      listener.close(done)
+    listener.once('listening', async () => {
+      await listener.close()
+      done()
     })
     listener.listen(ma)
   })
 
   it('listen, check for the close event', (done) => {
     const listener = wd.createListener({ config: {} }, (conn) => {})
-    listener.listen(ma, (err) => {
-      expect(err).to.not.exist()
+    listener.listen(ma).then(() => {
       listener.once('close', done)
+
       listener.close()
     })
   })
@@ -61,15 +65,14 @@ describe('listen', () => {
     // TODO IPv6 not supported yet
   })
 
-  it('getAddrs', (done) => {
+  it('getAddrs', async () => {
     const listener = wd.createListener({ config: {} }, (conn) => {})
-    listener.listen(ma, (err) => {
-      expect(err).to.not.exist()
-      listener.getAddrs((err, addrs) => {
-        expect(err).to.not.exist()
-        expect(addrs[0]).to.deep.equal(ma)
-        listener.close(done)
-      })
-    })
+
+    await listener.listen(ma)
+
+    const addrs = listener.getAddrs()
+    expect(addrs[0]).to.deep.equal(ma)
+
+    await listener.close()
   })
 })

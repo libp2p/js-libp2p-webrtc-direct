@@ -39,43 +39,33 @@
 ```js
 const WebRTCDirect = require('libp2p-webrtc-direct')
 const multiaddr = require('multiaddr')
-const pull = require('pull-stream')
+const pipe = require('pull-stream')
+const { collect } = require('streaming-iterables')
 
-const mh = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+const addr = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 
 const webRTCDirect = new WebRTCDirect()
 
 const listener = webRTCDirect.createListener((socket) => {
   console.log('new connection opened')
-  pull(
-    pull.values(['hello']),
+  pipe(
+    ['hello'],
     socket
   )
 })
 
-listener.listen(mh, () => {
-  console.log('listening')
+await listener.listen(addr)
+console.log('listening')
 
-  webRTCDirect.dial(mh, (err, conn) => {
-    if (!err) {
-      pull(
-        conn,
-        pull.collect((err, values) => {
-          if (!err) {
-            console.log(`Value: ${values.toString()}`)
-          } else {
-            console.log(`Error: ${err}`)
-          }
-          
-          // Close connection after reading
-          listener.close()
-        }),
-      )
-    } else {
-      console.log(`Error: ${err}`)
-    }
-  })
-})
+const conn = await webRTCDirect.dial(addr)
+const values = await pipe(
+  conn,
+  collect
+)
+console.log(`Value: ${values.toString()}`)
+
+// Close connection after reading
+await listener.close()
 ```
 
 Outputs:
@@ -89,32 +79,22 @@ Note that it may take some time for the connection to be established.
 
 ## API
 
-Follows the interface defined by `interface-transport`
+### Transport
 
-[![](https://raw.githubusercontent.com/diasdavid/interface-transport/master/img/badge.png)](https://github.com/libp2p/interface-transport)
+[![](https://raw.githubusercontent.com/libp2p/interface-transport/master/img/badge.png)](https://github.com/libp2p/interface-transport)
 
-## Pull-streams
+### Connection
 
-### This module uses `pull-streams`
+[![](https://raw.githubusercontent.com/libp2p/interface-connection/master/img/badge.png)](https://github.com/libp2p/interface-connection)
 
-We expose a streaming interface based on `pull-streams`, rather then on the Node.js core streams implementation (aka Node.js streams). `pull-streams` offers us a better mechanism for error handling and flow control guarantees. If you would like to know more about why we did this, see the discussion at this [issue](https://github.com/ipfs/js-ipfs/issues/362).
+## Contribute
 
-You can learn more about pull-streams at:
+The libp2p implementation in JavaScript is a work in progress. As such, there are a few things you can do right now to help out:
 
-- [The history of Node.js streams, nodebp April 2014](https://www.youtube.com/watch?v=g5ewQEuXjsQ)
-- [The history of streams, 2016](http://dominictarr.com/post/145135293917/history-of-streams)
-- [pull-streams, the simple streaming primitive](http://dominictarr.com/post/149248845122/pull-streams-pull-streams-are-a-very-simple)
-- [pull-streams documentation](https://pull-stream.github.io/)
+ - Go through the modules and **check out existing issues**. This would be especially useful for modules in active development. Some knowledge of IPFS/libp2p may be required, as well as the infrastructure behind it - for instance, you may need to read up on p2p and more complex operations like muxing to be able to help technically.
+ - **Perform code reviews**.
+ - **Add tests**. There can never be enough tests.
 
-#### Converting `pull-streams` to Node.js Streams
+## License
 
-If you are a Node.js streams user, you can convert a pull-stream to a Node.js stream using the module [`pull-stream-to-stream`](https://github.com/pull-stream/pull-stream-to-stream), giving you an instance of a Node.js stream that is linked to the pull-stream. For example:
-
-```JavaScript
-const pullToStream = require('pull-stream-to-stream')
-
-const nodeStreamInstance = pullToStream(pullStreamInstance)
-// nodeStreamInstance is an instance of a Node.js Stream
-```
-
-To learn more about this utility, visit https://pull-stream.github.io/#pull-stream-to-stream.
+[MIT](LICENSE) © Protocol Labs

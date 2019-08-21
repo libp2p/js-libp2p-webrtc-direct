@@ -18,7 +18,9 @@ function boot (done) {
   listener = wd.createListener((conn) => pull(conn, conn))
   listener.listen(ma, done)
   listener.on('listening', () => {
+    /* eslint-disable no-console */
     console.log('gulp listener started on:', ma.toString())
+    /* eslint-enable no-console */
   })
 }
 

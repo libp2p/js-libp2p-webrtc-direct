@@ -8,9 +8,14 @@ chai.use(dirtyChai)
 
 const WebRTCDirect = require('../src')
 
+const mockUpgrader = {
+  upgradeInbound: maConn => maConn,
+  upgradeOutbound: maConn => maConn
+}
+
 describe('instances', () => {
   it('create', (done) => {
-    const wdirect = new WebRTCDirect()
+    const wdirect = new WebRTCDirect({ upgrader: mockUpgrader })
     expect(wdirect).to.exist()
     done()
   })

@@ -9,9 +9,14 @@ const multiaddr = require('multiaddr')
 
 const WebRTCDirect = require('../src')
 
+const mockUpgrader = {
+  upgradeInbound: maConn => maConn,
+  upgradeOutbound: maConn => maConn
+}
+
 describe('filter', () => {
   it('filters non valid webrtc-direct multiaddrs', () => {
-    const wd = new WebRTCDirect()
+    const wd = new WebRTCDirect({ upgrader: mockUpgrader })
     const maArr = [
       multiaddr('/ip4/1.2.3.4/tcp/3456/http/p2p-webrtc-direct'),
       multiaddr('/ip4/127.0.0.1/tcp/9090/ws'),
@@ -26,7 +31,7 @@ describe('filter', () => {
   })
 
   it('filter a single addr for this transport', () => {
-    const wd = new WebRTCDirect()
+    const wd = new WebRTCDirect({ upgrader: mockUpgrader })
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 
     const filtered = wd.filter(ma)
