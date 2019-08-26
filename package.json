@@ -4,6 +4,7 @@
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
   "leadMaintainer": "Vasco Santos <vasco.santos@moxy.studio>",
   "main": "src/index.js",
+  "typings": "src/types.d.ts",
   "browser": {
     "wrtc": false,
     "http": false,
@@ -19,7 +20,8 @@
     "release-minor": "aegir release --type minor --target node --target browser",
     "release-major": "aegir release --type major --target node --target browser",
     "coverage": "aegir coverage",
-    "coverage-publish": "aegir coverage --provider coveralls"
+    "coverage-publish": "aegir coverage --provider coveralls",
+    "generate-typings": "./node_modules/.bin/jsdoc -c ./.jsdoc.json"
   },
   "pre-push": [
     "lint",
@@ -48,7 +50,10 @@
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "gulp": "^4.0.0",
+    "jsdoc": "^3.6.3",
     "multiaddr": "^6.0.6",
+    "tsd-jsdoc": "^2.3.1",
+    "typescript-definition-tester": "0.0.6",
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {

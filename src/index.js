@@ -1,4 +1,7 @@
 'use strict'
+/**
+ * @module js-libp2p-webrtc-direct
+ */
 
 const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
@@ -19,7 +22,16 @@ function cleanMultiaddr (ma) {
   return ma.decapsulate('/p2p-webrtc-direct')
 }
 
+/**
+ * @class
+ */
 class WebRTCDirect {
+  /**
+   *
+   * @param {*} ma
+   * @param {object} options
+   * @param {function} callback
+   */
   dial (ma, options, callback) {
     if (typeof options === 'function') {
       callback = options
@@ -76,7 +88,11 @@ class WebRTCDirect {
       }
     })
   }
-
+  /**
+   *
+   * @param {object} options
+   * @param {function} handler 
+   */
   createListener (options, handler) {
     if (!isNode) {
       throw new Error(`Can't listen if run from the Browser`)
@@ -161,7 +177,10 @@ class WebRTCDirect {
 
     return listener
   }
-
+  /**
+   *
+   * @param {*} multiaddrs 
+   */
   filter (multiaddrs) {
     if (!Array.isArray(multiaddrs)) {
       multiaddrs = [multiaddrs]
