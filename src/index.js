@@ -3,6 +3,7 @@
 const assert = require('debug')
 const debug = require('debug')
 const log = debug('libp2p:webrtcdirect')
+log.error = debug('libp2p:webrtcdirect:error')
 const errcode = require('err-code')
 
 const wrtc = require('wrtc')
@@ -63,10 +64,10 @@ class WebRTCDirect {
     }
 
     options = {
-      ...options,
       initiator: true,
       trickle: false,
-      wrtc: isNode ? wrtc : undefined
+      wrtc: isNode ? wrtc : undefined,
+      ...options
     }
 
     return new Promise((resolve, reject) => {
@@ -80,7 +81,10 @@ class WebRTCDirect {
 
       const onError = (err) => {
         if (!connected) {
-          err.message = `connection error ${cOpts.host}:${cOpts.port}: ${err.message}`
+          const msg = `connection error ${cOpts.host}:${cOpts.port}: ${err.message}`
+
+          log.error(msg)
+          err.message = msg
           done(err)
         }
       }
@@ -100,7 +104,7 @@ class WebRTCDirect {
       }
 
       const onAbort = () => {
-        log('connection aborted %s:%s', cOpts.host, cOpts.port)
+        log.error('connection aborted %s:%s', cOpts.host, cOpts.port)
         channel.destroy()
         done(new AbortError())
       }

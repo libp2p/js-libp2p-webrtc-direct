@@ -7,8 +7,8 @@ const { CLOSE_TIMEOUT } = require('./constants')
 const toMultiaddr = require('libp2p-utils/src/ip-port-to-multiaddr')
 
 const debug = require('debug')
-const log = debug('libp2p:libp2p:webrtcdirect:socket')
-log.error = debug('libp2p:libp2p:webrtcdirect:socket:error')
+const log = debug('libp2p:webrtcdirect:socket')
+log.error = debug('libp2p:webrtcdirect:socket:error')
 
 // Convert a socket into a MultiaddrConnection
 // https://github.com/libp2p/interface-transport#multiaddrconnection
@@ -74,15 +74,14 @@ module.exports = (socket, options = {}) => {
         }, CLOSE_TIMEOUT)
 
         socket.once('close', () => {
-          clearTimeout(timeout)
-          maConn.timeline.close = Date.now()
           resolve()
         })
 
-        socket.end(err => {
-          if (err) return reject(err)
+        socket.end((err) => {
+          clearTimeout(timeout)
+
           maConn.timeline.close = Date.now()
-          resolve()
+          if (err) return reject(err)
         })
       })
     }

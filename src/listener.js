@@ -2,7 +2,7 @@
 
 const http = require('http')
 const EventEmitter = require('events')
-const log = require('debug')('libp2p:libp2p:webrtcdirect:listener')
+const log = require('debug')('libp2p:webrtcdirect:listener')
 
 const isNode = require('detect-node')
 const wrtc = require('wrtc')
@@ -19,7 +19,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
   let maSelf
 
   // Keep track of open connections to destroy in case of timeout
-  server.__connections = []
+  listener.__connections = []
 
   server.on('request', async (req, res) => {
     res.setHeader('Content-Type', 'text/plain')
@@ -31,22 +31,19 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     const incSignal = JSON.parse(incSignalBuf.toString())
 
     options = {
-      ...options,
-      trickle: false
-    }
-
-    if (isNode) {
-      options.wrtc = wrtc
+      trickle: false,
+      wrtc: isNode ? wrtc : undefined,
+      ...options
     }
 
     const channel = new SimplePeer(options)
-    const maConn = toConnection(channel)
+    const maConn = toConnection(channel, listener.__connections)
     log('new inbound connection %s', maConn.remoteAddr)
 
     const conn = await upgrader.upgradeInbound(maConn)
     log('inbound connection %s upgraded', maConn.remoteAddr)
 
-    trackConn(server, maConn)
+    trackConn(listener, maConn)
 
     channel.on('connect', () => {
       listener.emit('connection', conn)
@@ -67,7 +64,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
   listener.listen = (ma) => {
     maSelf = ma
-    const lOpts = ma.decapsulate('/p2p-webrtc-direct').toOptions()
+    const lOpts = ma.toOptions()
 
     return new Promise((resolve, reject) => {
       server.on('listening', (err) => {
@@ -90,7 +87,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     }
 
     return new Promise((resolve, reject) => {
-      server.__connections.forEach(maConn => maConn.close())
+      listener.__connections.forEach(maConn => maConn.close())
       server.close((err) => err ? reject(err) : resolve())
     })
   }
@@ -102,6 +99,12 @@ module.exports = ({ handler, upgrader }, options = {}) => {
   return listener
 }
 
-function trackConn (server, maConn) {
-  server.__connections.push(maConn)
+function trackConn (listener, maConn) {
+  listener.__connections.push(maConn)
+
+  const untrackConn = () => {
+    listener.__connections = listener.__connections.filter(c => c !== maConn)
+  }
+
+  maConn.conn.once('close', untrackConn)
 }

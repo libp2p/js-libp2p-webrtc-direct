@@ -12,18 +12,19 @@ const mockUpgrader = {
   upgradeOutbound: maConn => maConn
 }
 
-function boot (done) {
+function boot () {
   const wd = new WebRTCDirect({ upgrader: mockUpgrader })
+
   listener = wd.createListener((conn) => pipe(conn, conn))
   listener.on('listening', () => {
-    console.log('gulp listener started on:', ma.toString())
+    console.log('listener started on:', ma.toString())
   })
-  listener.listen(ma).then(() => done()).catch(done)
   listener.on('error', console.error)
+  return listener.listen(ma)
 }
 
-function shutdown (done) {
-  listener.close().then(done).catch(done)
+function shutdown () {
+  return listener.close()
 }
 
 module.exports = {

@@ -6,7 +6,10 @@ const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
+
 const multiaddr = require('multiaddr')
+const pipe = require('it-pipe')
+
 const WebRTCDirect = require('../src')
 
 const mockUpgrader = {
@@ -57,10 +60,6 @@ describe('listen', () => {
     // TODO
   })
 
-  it.skip('close listener with connections, through timeout', (done) => {
-    // TODO
-  })
-
   it.skip('listen on IPv6 addr', (done) => {
     // TODO IPv6 not supported yet
   })
@@ -74,5 +73,29 @@ describe('listen', () => {
     expect(addrs[0]).to.deep.equal(ma)
 
     await listener.close()
+  })
+
+  it('should untrack conn after being closed', async function () {
+    this.timeout(20e3)
+
+    const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+
+    const wd1 = new WebRTCDirect({ upgrader: mockUpgrader })
+    const listener1 = wd1.createListener((conn) => pipe(conn, conn))
+
+    await listener1.listen(ma1)
+    expect(listener1.__connections).to.have.lengthOf(0)
+
+    const conn = await wd.dial(ma1)
+    expect(listener1.__connections).to.have.lengthOf(1)
+
+    await conn.close()
+
+    // wait for listener to know of the disconnect
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000)
+    })
+
+    expect(listener1.__connections).to.have.lengthOf(0)
   })
 })
