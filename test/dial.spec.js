@@ -8,9 +8,16 @@ const expect = chai.expect
 chai.use(dirtyChai)
 
 const multiaddr = require('multiaddr')
-const pull = require('pull-stream')
+
+const pipe = require('it-pipe')
+const { collect } = require('streaming-iterables')
 
 const WebRTCDirect = require('../src')
+
+const mockUpgrader = {
+  upgradeInbound: maConn => maConn,
+  upgradeOutbound: maConn => maConn
+}
 
 describe('dial', function () {
   this.timeout(20 * 1000)
@@ -19,37 +26,36 @@ describe('dial', function () {
   let wd
 
   before(() => {
-    wd = new WebRTCDirect()
+    wd = new WebRTCDirect({ upgrader: mockUpgrader })
   })
 
-  it('dial on IPv4, check callback', (done) => {
-    wd.dial(ma, { config: {} }, (err, conn) => {
-      expect(err).to.not.exist()
+  it('dial on IPv4', async () => {
+    const conn = await wd.dial(ma)
+    const data = Buffer.from('some data')
 
-      const data = Buffer.from('some data')
+    const values = await pipe(
+      [data],
+      conn,
+      collect
+    )
 
-      pull(
-        pull.values([data]),
-        conn,
-        pull.collect((err, values) => {
-          expect(err).to.not.exist()
-          expect(values).to.eql([data])
-          done()
-        })
-      )
-    })
+    expect(values).to.eql([data])
   })
 
-  it('dial offline / non-existent node on IPv4, check callback', (done) => {
-    let maOffline = multiaddr('/ip4/127.0.0.1/tcp/55555/http/p2p-webrtc-direct')
+  it('dial offline / non-existent node on IPv4, check callback', async () => {
+    const maOffline = multiaddr('/ip4/127.0.0.1/tcp/55555/http/p2p-webrtc-direct')
 
-    wd.dial(maOffline, { config: {} }, (err, conn) => {
+    try {
+      await wd.dial(maOffline, { config: {} })
+    } catch (err) {
       expect(err).to.exist()
-      done()
-    })
+      return
+    }
+
+    throw new Error('dial did not fail')
   })
 
-  it.skip('dial on IPv6', (done) => {
+  it.skip('dial on IPv6', () => {
     // TODO IPv6 not supported yet
   })
 })

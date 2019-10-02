@@ -1,85 +1,159 @@
 'use strict'
 
+const assert = require('debug')
+const debug = require('debug')
+const log = debug('libp2p:webrtcdirect')
+log.error = debug('libp2p:webrtcdirect:error')
+const errcode = require('err-code')
+
 const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
 const isNode = require('detect-node')
-const http = require('http')
-const toPull = require('stream-to-pull-stream')
-const Connection = require('interface-connection').Connection
-const EE = require('events').EventEmitter
 const mafmt = require('mafmt')
 const multibase = require('multibase')
-const once = require('once')
 const request = require('request')
 const withIs = require('class-is')
+const { AbortError } = require('abortable-iterator')
+
+const { CODE_CIRCUIT, CODE_P2P } = require('./constants')
+const toConnection = require('./socket-to-conn')
+const createListener = require('./listener')
 
 function noop () {}
 
-function cleanMultiaddr (ma) {
-  return ma.decapsulate('/p2p-webrtc-direct')
-}
-
+/**
+ * @class WebRTCDirect
+ */
 class WebRTCDirect {
-  dial (ma, options, callback) {
-    if (typeof options === 'function') {
-      callback = options
-      options = {}
+  /**
+   * @constructor
+   * @param {object} options
+   * @param {Upgrader} options.upgrader
+   */
+  constructor ({ upgrader }) {
+    assert(upgrader, 'An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+    this._upgrader = upgrader
+  }
+
+  /**
+   * @async
+   * @param {Multiaddr} ma
+   * @param {object} options
+   * @param {AbortSignal} options.signal Used to abort dial requests
+   * @returns {Connection} An upgraded Connection
+   */
+  async dial (ma, options = {}) {
+    const socket = await this._connect(ma, options)
+    const maConn = toConnection(socket, { remoteAddr: ma, signal: options.signal })
+    log('new outbound connection %s', maConn.remoteAddr)
+    const conn = await this._upgrader.upgradeOutbound(maConn)
+    log('outbound connection %s upgraded', maConn.remoteAddr)
+    return conn
+  }
+
+  /**
+   * @private
+   * @param {Multiaddr} ma
+   * @param {object} options
+   * @param {AbortSignal} options.signal Used to abort dial requests
+   * @returns {Promise<SimplePeer>} Resolves a SimplePeer Webrtc channel
+   */
+  _connect (ma, options = {}) {
+    if (options.signal && options.signal.aborted) {
+      throw new AbortError()
     }
 
-    callback = once(callback || noop)
-
-    Object.assign(options, {
+    options = {
       initiator: true,
-      trickle: false
-    })
-
-    if (isNode) {
-      options.wrtc = wrtc
+      trickle: false,
+      wrtc: isNode ? wrtc : undefined,
+      ...options
     }
 
-    const channel = new SimplePeer(options)
-    const conn = new Connection(toPull.duplex(channel))
+    return new Promise((resolve, reject) => {
+      const start = Date.now()
+      let connected
 
-    let connected = false
+      const cOpts = ma.toOptions()
+      log('Dialing %s:%s', cOpts.host, cOpts.port)
 
-    channel.on('signal', (signal) => {
-      const signalStr = JSON.stringify(signal)
-      const cma = cleanMultiaddr(ma)
-      const url = 'http://' + cma.toOptions().host + ':' + cma.toOptions().port
-      const path = '/?signal=' + multibase.encode('base58btc', Buffer.from(signalStr))
-      const uri = url + path
+      const channel = new SimplePeer(options)
 
-      request.get(uri, (err, res) => {
-        if (err) {
-          return callback(err)
+      const onError = (err) => {
+        if (!connected) {
+          const msg = `connection error ${cOpts.host}:${cOpts.port}: ${err.message}`
+
+          log.error(msg)
+          err.message = msg
+          done(err)
         }
-        const incSignalBuf = multibase.decode(res.body)
-        const incSignalStr = incSignalBuf.toString()
-        const incSignal = JSON.parse(incSignalStr)
-        channel.signal(incSignal)
-      })
-    })
-
-    channel.on('connect', () => {
-      connected = true
-      callback(null, conn)
-    })
-
-    conn.destroy = channel.destroy.bind(channel)
-    conn.getObservedAddrs = (callback) => callback(null, [ma])
-
-    channel.on('timeout', () => callback(new Error('timeout')))
-    channel.on('close', () => conn.destroy())
-    channel.on('error', (err) => {
-      if (!connected) {
-        callback(err)
       }
+
+      const onTimeout = () => {
+        log('connnection timeout %s:%s', cOpts.host, cOpts.port)
+        const err = errcode(new Error(`connection timeout after ${Date.now() - start}ms`), 'ERR_CONNECT_TIMEOUT')
+        // Note: this will result in onError() being called
+        channel.emit('error', err)
+      }
+
+      const onConnect = () => {
+        connected = true
+
+        log('connection opened %s:%s', cOpts.host, cOpts.port)
+        done(null)
+      }
+
+      const onAbort = () => {
+        log.error('connection aborted %s:%s', cOpts.host, cOpts.port)
+        channel.destroy()
+        done(new AbortError())
+      }
+
+      const done = (err) => {
+        channel.removeListener('error', onError)
+        channel.removeListener('timeout', onTimeout)
+        channel.removeListener('connect', onConnect)
+        options.signal && options.signal.removeEventListener('abort', onAbort)
+
+        err ? reject(err) : resolve(channel)
+      }
+
+      channel.once('error', onError)
+      channel.once('timeout', onTimeout)
+      channel.once('connect', onConnect)
+      channel.on('close', () => channel.destroy())
+      options.signal && options.signal.addEventListener('abort', onAbort)
+
+      channel.on('signal', (signal) => {
+        const signalStr = JSON.stringify(signal)
+        const url = 'http://' + cOpts.host + ':' + cOpts.port
+        const path = '/?signal=' + multibase.encode('base58btc', Buffer.from(signalStr))
+        const uri = url + path
+
+        request.get(uri, (err, res) => {
+          if (err) {
+            return reject(err)
+          }
+          const incSignalBuf = multibase.decode(res.body)
+          const incSignalStr = incSignalBuf.toString()
+          const incSignal = JSON.parse(incSignalStr)
+          channel.signal(incSignal)
+        })
+      })
     })
   }
 
-  createListener (options, handler) {
+  /**
+   * Creates a WebrtcDirect listener. The provided `handler` function will be called
+   * anytime a new incoming Connection has been successfully upgraded via
+   * `upgrader.upgradeInbound`.
+   * @param {*} [options]
+   * @param {function(Connection)} handler
+   * @returns {Listener} A WebrtcDirect listener
+   */
+  createListener (options = {}, handler) {
     if (!isNode) {
-      throw new Error(`Can't listen if run from the Browser`)
+      throw errcode(new Error('Can\'t listen if run from the Browser'), 'ERR_NO_SUPPORT_FROM_BROWSER')
     }
 
     if (typeof options === 'function') {
@@ -87,92 +161,25 @@ class WebRTCDirect {
       options = {}
     }
 
-    const listener = new EE()
-    const server = http.createServer()
-    let maSelf
+    handler = handler || noop
 
-    server.on('request', (req, res) => {
-      res.setHeader('Content-Type', 'text/plain')
-      res.setHeader('Access-Control-Allow-Origin', '*')
-
-      const path = req.url
-      const incSignalStr = path.split('?signal=')[1]
-      const incSignalBuf = multibase.decode(Buffer.from(incSignalStr))
-      const incSignal = JSON.parse(incSignalBuf.toString())
-
-      Object.assign(options, {
-        trickle: false
-      })
-
-      if (isNode) {
-        options.wrtc = wrtc
-      }
-
-      const channel = new SimplePeer(options)
-      const conn = new Connection(toPull.duplex(channel))
-
-      channel.on('connect', () => {
-        conn.getObservedAddrs = (callback) => callback(null, [])
-        listener.emit('connection', conn)
-        handler(conn)
-      })
-
-      channel.on('signal', (signal) => {
-        const signalStr = JSON.stringify(signal)
-        const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
-        res.end(signalEncoded.toString())
-      })
-
-      channel.signal(incSignal)
-    })
-
-    listener.listen = (ma, callback) => {
-      callback = callback || noop
-
-      maSelf = ma
-      server.on('listening', () => {
-        listener.emit('listening')
-        callback()
-      })
-
-      const cma = cleanMultiaddr(ma)
-      server.listen(cma.toOptions())
-    }
-
-    listener.close = (options, callback) => {
-      if (typeof options === 'function') {
-        callback = options
-        options = {}
-      }
-
-      callback = callback || noop
-
-      server.close(() => {
-        listener.emit('close')
-        callback()
-      })
-    }
-
-    listener.getAddrs = (callback) => {
-      setImmediate(() => {
-        callback(null, [maSelf])
-      })
-    }
-
-    return listener
+    return createListener({ handler, upgrader: this._upgrader }, options)
   }
 
+  /**
+   * Takes a list of `Multiaddr`s and returns only valid addresses
+   * @param {Multiaddr[]} multiaddrs
+   * @returns {Multiaddr[]} Valid multiaddrs
+   */
   filter (multiaddrs) {
-    if (!Array.isArray(multiaddrs)) {
-      multiaddrs = [multiaddrs]
-    }
+    multiaddrs = Array.isArray(multiaddrs) ? multiaddrs : [multiaddrs]
 
     return multiaddrs.filter((ma) => {
-      if (ma.protoNames().indexOf('p2p-circuit') > -1) {
+      if (ma.protoCodes().includes(CODE_CIRCUIT)) {
         return false
       }
 
-      return mafmt.WebRTCDirect.matches(ma)
+      return mafmt.WebRTCDirect.matches(ma.decapsulateCode(CODE_P2P))
     })
   }
 }
