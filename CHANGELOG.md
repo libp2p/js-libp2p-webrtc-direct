@@ -1,3 +1,18 @@
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.3.1...v0.4.0) (2019-10-02)
+
+
+### Code Refactoring
+
+* switch to async iterators ([#30](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/30)) ([4def4aa](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/4def4aa))
+
+
+### BREAKING CHANGES
+
+* Switch to using async/await and async iterators. The transport and connection interfaces have changed.
+
+
+
 <a name="0.3.1"></a>
 ## [0.3.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.3.0...v0.3.1) (2018-09-26)
 
