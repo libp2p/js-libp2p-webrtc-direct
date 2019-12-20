@@ -2,7 +2,9 @@
 
 const http = require('http')
 const EventEmitter = require('events')
-const log = require('debug')('libp2p:webrtcdirect:listener')
+const debug = require('debug')
+const log = debug('libp2p:webrtcdirect:listener')
+log.error = debug('libp2p:webrtcdirect:listener:error')
 
 const isNode = require('detect-node')
 const wrtc = require('wrtc')
@@ -40,7 +42,21 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     const maConn = toConnection(channel, listener.__connections)
     log('new inbound connection %s', maConn.remoteAddr)
 
-    const conn = await upgrader.upgradeInbound(maConn)
+    channel.on('signal', (signal) => {
+      const signalStr = JSON.stringify(signal)
+      const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
+      res.end(signalEncoded.toString())
+    })
+
+    channel.signal(incSignal)
+
+    let conn
+    try {
+      conn = await upgrader.upgradeInbound(maConn)
+    } catch (err) {
+      log.error('inbound connection failed to upgrade', err)
+      return maConn.close()
+    }
     log('inbound connection %s upgraded', maConn.remoteAddr)
 
     trackConn(listener, maConn)
@@ -49,14 +65,6 @@ module.exports = ({ handler, upgrader }, options = {}) => {
       listener.emit('connection', conn)
       handler(conn)
     })
-
-    channel.on('signal', (signal) => {
-      const signalStr = JSON.stringify(signal)
-      const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
-      res.end(signalEncoded.toString())
-    })
-
-    channel.signal(incSignal)
   })
 
   server.on('error', (err) => listener.emit('error', err))
