@@ -6,12 +6,10 @@ const debug = require('debug')
 const log = debug('libp2p:webrtcdirect:listener')
 log.error = debug('libp2p:webrtcdirect:listener:error')
 
-const isNode = require('detect-node')
-const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
-
 const multibase = require('multibase')
 
+const { getWrtc } = require('./utils')
 const toConnection = require('./socket-to-conn')
 
 module.exports = ({ handler, upgrader }, options = {}) => {
@@ -34,7 +32,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
     options = {
       trickle: false,
-      wrtc: isNode ? wrtc : undefined,
+      wrtc: getWrtc(),
       ...options
     }
 

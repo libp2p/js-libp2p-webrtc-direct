@@ -6,7 +6,6 @@ const log = debug('libp2p:webrtcdirect')
 log.error = debug('libp2p:webrtcdirect:error')
 const errcode = require('err-code')
 
-const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
 const isNode = require('detect-node')
 const mafmt = require('mafmt')
@@ -18,6 +17,7 @@ const { AbortError } = require('abortable-iterator')
 const { CODE_CIRCUIT, CODE_P2P } = require('./constants')
 const toConnection = require('./socket-to-conn')
 const createListener = require('./listener')
+const { getWrtc } = require('./utils')
 
 function noop () {}
 
@@ -66,7 +66,7 @@ class WebRTCDirect {
     options = {
       initiator: true,
       trickle: false,
-      wrtc: isNode ? wrtc : undefined,
+      wrtc: getWrtc(),
       ...options
     }
 
