@@ -55,6 +55,7 @@
     "abortable-iterator": "^2.1.0",
     "class-is": "^1.1.0",
     "concat-stream": "^2.0.0",
+    "debug": "^4.1.1",
     "detect-node": "^2.0.4",
     "err-code": "^2.0.0",
     "libp2p-interfaces": "libp2p/js-interfaces#chore/skip-abort-while-reading-for-webrtc",

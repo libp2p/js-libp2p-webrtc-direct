@@ -1,8 +1,6 @@
 /* eslint-env mocha */
 'use strict'
 
-const wrtc = require('wrtc')
-
 const tests = require('libp2p-interfaces/src/transport/tests')
 const multiaddr = require('multiaddr')
 
@@ -11,7 +9,7 @@ const WDirect = require('../src')
 describe('interface-transport compliance', () => {
   tests({
     setup ({ upgrader }) {
-      const ws = new WDirect({ upgrader, wrtc: wrtc })
+      const ws = new WDirect({ upgrader })
 
       const addrs = [
         multiaddr('/ip4/127.0.0.1/tcp/22222/http/p2p-webrtc-direct'),
