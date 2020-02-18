@@ -1,13 +1,15 @@
 'use strict'
 
+const debug = require('debug')
+const log = debug('libp2p:webrtcdirect:listener')
+log.error = debug('libp2p:webrtcdirect:listener:error')
+
 const http = require('http')
 const EventEmitter = require('events')
-const log = require('debug')('libp2p:webrtcdirect:listener')
 
 const isNode = require('detect-node')
 const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
-
 const multibase = require('multibase')
 
 const toConnection = require('./socket-to-conn')
@@ -21,7 +23,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
   // Keep track of open connections to destroy in case of timeout
   listener.__connections = []
 
-  server.on('request', async (req, res) => {
+  server.on('request', (req, res) => {
     res.setHeader('Content-Type', 'text/plain')
     res.setHeader('Access-Control-Allow-Origin', '*')
 
@@ -37,15 +39,22 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     }
 
     const channel = new SimplePeer(options)
-    const maConn = toConnection(channel, listener.__connections)
-    log('new inbound connection %s', maConn.remoteAddr)
 
-    const conn = await upgrader.upgradeInbound(maConn)
-    log('inbound connection %s upgraded', maConn.remoteAddr)
+    channel.on('connect', async () => {
+      const maConn = toConnection(channel, listener.__connections)
+      log('new inbound connection %s', maConn.remoteAddr)
 
-    trackConn(listener, maConn)
+      let conn
+      try {
+        conn = await upgrader.upgradeInbound(maConn)
+      } catch (err) {
+        log.error('inbound connection failed to upgrade', err)
+        return maConn.close()
+      }
+      log('inbound connection %s upgraded', maConn.remoteAddr)
 
-    channel.on('connect', () => {
+      trackConn(listener, maConn)
+
       listener.emit('connection', conn)
       handler(conn)
     })

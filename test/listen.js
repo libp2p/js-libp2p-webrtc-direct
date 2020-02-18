@@ -7,6 +7,7 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 
+const delay = require('delay')
 const multiaddr = require('multiaddr')
 const pipe = require('it-pipe')
 
@@ -87,14 +88,15 @@ describe('listen', () => {
     expect(listener1.__connections).to.have.lengthOf(0)
 
     const conn = await wd.dial(ma1)
+    // wait for listener to know of the connect
+    await delay(1000)
+
     expect(listener1.__connections).to.have.lengthOf(1)
 
     await conn.close()
 
     // wait for listener to know of the disconnect
-    await new Promise((resolve) => {
-      setTimeout(resolve, 1000)
-    })
+    await delay(1000)
 
     expect(listener1.__connections).to.have.lengthOf(0)
   })

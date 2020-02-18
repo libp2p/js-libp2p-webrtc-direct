@@ -1,6 +1,5 @@
 'use strict'
 
-const assert = require('debug')
 const debug = require('debug')
 const log = debug('libp2p:webrtcdirect')
 log.error = debug('libp2p:webrtcdirect:error')
@@ -31,7 +30,9 @@ class WebRTCDirect {
    * @param {Upgrader} options.upgrader
    */
   constructor ({ upgrader }) {
-    assert(upgrader, 'An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+    if (!upgrader) {
+      throw new Error('An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+    }
     this._upgrader = upgrader
   }
 

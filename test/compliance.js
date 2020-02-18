@@ -3,13 +3,13 @@
 
 const wrtc = require('wrtc')
 
-const tests = require('interface-transport')
+const testsTransport = require('libp2p-interfaces/src/transport/tests')
 const multiaddr = require('multiaddr')
 
 const WDirect = require('../src')
 
 describe('interface-transport compliance', () => {
-  tests({
+  testsTransport({
     setup ({ upgrader }) {
       const ws = new WDirect({ upgrader, wrtc: wrtc })
 

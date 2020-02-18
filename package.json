@@ -45,17 +45,21 @@
   "devDependencies": {
     "aegir": "^20.3.1",
     "chai": "^4.2.0",
+    "delay": "^4.3.0",
     "dirty-chai": "^2.0.1",
+    "it-pipe": "^1.1.0",
     "multiaddr": "^7.1.0",
+    "streaming-iterables": "^4.1.2",
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
     "abortable-iterator": "^2.1.0",
     "class-is": "^1.1.0",
     "concat-stream": "^2.0.0",
+    "debug": "^4.1.1",
     "detect-node": "^2.0.4",
     "err-code": "^2.0.0",
-    "interface-transport": "libp2p/interface-transport#chore/skip-abort-while-reading-for-webrtc",
+    "libp2p-interfaces": "libp2p/js-interfaces#skip-abort-while-reading",
     "libp2p-utils": "^0.1.0",
     "mafmt": "^7.0.0",
     "multibase": "~0.6.0",
