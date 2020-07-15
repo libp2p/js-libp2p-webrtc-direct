@@ -62,7 +62,7 @@
     "once": "^1.4.0",
     "request": "^2.88.0",
     "simple-peer": "9.6.0",
-    "stream-to-it": "^0.1.1",
+    "stream-to-it": "^0.2.2",
     "wrtc": "~0.4.2",
     "xhr": "^2.5.0"
   },
