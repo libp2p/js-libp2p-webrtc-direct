@@ -56,7 +56,7 @@
     "detect-node": "^2.0.4",
     "err-code": "^2.0.0",
     "interface-transport": "libp2p/interface-transport#chore/skip-abort-while-reading-for-webrtc",
-    "libp2p-utils": "^0.1.0",
+    "libp2p-utils": "^0.2.1",
     "mafmt": "^7.0.0",
     "multibase": "~0.6.0",
     "once": "^1.4.0",
