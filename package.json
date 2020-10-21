@@ -43,7 +43,7 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
   "devDependencies": {
-    "aegir": "^20.3.1",
+    "aegir": "^28.0.2",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "multiaddr": "^7.1.0",
