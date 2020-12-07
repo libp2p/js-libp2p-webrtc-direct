@@ -6,6 +6,7 @@ const log = debug('libp2p:webrtcdirect')
 log.error = debug('libp2p:webrtcdirect:error')
 const errcode = require('err-code')
 
+const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
 const isNode = require('detect-node')
 const mafmt = require('mafmt')
@@ -28,13 +29,10 @@ class WebRTCDirect {
    * @constructor
    * @param {object} options
    * @param {Upgrader} options.upgrader
-   * @param {wrtc} options.wrtc implementation
    */
-  constructor ({ upgrader, wrtc }) {
+  constructor ({ upgrader }) {
     assert(upgrader, 'An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
     this._upgrader = upgrader
-    try { wrtc = wrtc || (isNode && require('wrtc')) } catch (_) { }
-    this._wrtc = wrtc
   }
 
   /**
@@ -68,7 +66,7 @@ class WebRTCDirect {
     options = {
       initiator: true,
       trickle: false,
-      wrtc: this._wrtc,
+      wrtc: isNode ? wrtc : undefined,
       ...options
     }
 
@@ -165,7 +163,7 @@ class WebRTCDirect {
 
     handler = handler || noop
 
-    return createListener({ handler, upgrader: this._upgrader, wrtc: this._wrtc }, options)
+    return createListener({ handler, upgrader: this._upgrader }, options)
   }
 
   /**

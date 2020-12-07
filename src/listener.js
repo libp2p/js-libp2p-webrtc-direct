@@ -6,12 +6,14 @@ const debug = require('debug')
 const log = debug('libp2p:webrtcdirect:listener')
 log.error = debug('libp2p:webrtcdirect:listener:error')
 
+const isNode = require('detect-node')
+const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
 const multibase = require('multibase')
 
 const toConnection = require('./socket-to-conn')
 
-module.exports = ({ handler, upgrader, wrtc }, options = {}) => {
+module.exports = ({ handler, upgrader }, options = {}) => {
   const listener = new EventEmitter()
   const server = http.createServer()
 
@@ -31,7 +33,7 @@ module.exports = ({ handler, upgrader, wrtc }, options = {}) => {
 
     options = {
       trickle: false,
-      wrtc,
+      wrtc: isNode ? wrtc : undefined,
       ...options
     }
 
