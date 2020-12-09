@@ -38,9 +38,16 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     }
 
     const channel = new SimplePeer(options)
+
     const maConn = toConnection(channel, listener.__connections)
     log('new inbound connection %s', maConn.remoteAddr)
 
+    channel.on('error', (err) => {
+      log.error(`incoming connectioned errored with ${err}`)
+    })
+    channel.once('close', () => {
+      channel.removeAllListeners('error')
+    })
     channel.on('signal', (signal) => {
       const signalStr = JSON.stringify(signal)
       const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
@@ -63,6 +70,9 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     channel.on('connect', () => {
       listener.emit('connection', conn)
       handler(conn)
+
+      channel.removeAllListeners('connect')
+      channel.removeAllListeners('signal')
     })
   })
 
