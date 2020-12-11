@@ -52,7 +52,7 @@
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
-    "abortable-iterator": "^2.1.0",
+    "abortable-iterator": "^3.0.0",
     "class-is": "^1.1.0",
     "concat-stream": "^2.0.0",
     "debug": "^4.1.1",
