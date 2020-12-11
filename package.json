@@ -1,6 +1,6 @@
 {
   "name": "libp2p-webrtc-direct",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
   "leadMaintainer": "Vasco Santos <vasco.santos@moxy.studio>",
   "main": "src/index.js",
@@ -77,6 +77,7 @@
     "Michiel De Backker <38858977+backkem@users.noreply.github.com>",
     "Vasco Santos <vasco.santos@moxy.studio>",
     "Vasco Santos <vasco.santos@ua.pt>",
+    "dependabot-preview[bot] <27856297+dependabot-preview[bot]@users.noreply.github.com>",
     "greenkeeper[bot] <greenkeeper[bot]@users.noreply.github.com>",
     "ᴠɪᴄᴛᴏʀ ʙᴊᴇʟᴋʜᴏʟᴍ <victorbjelkholm@gmail.com>"
   ]
