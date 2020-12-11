@@ -26,7 +26,7 @@ module.exports = (socket, options = {}) => {
         await sink((async function * () {
           for await (const chunk of source) {
             // Convert BufferList to Buffer
-            yield Buffer.isBuffer(chunk) ? chunk : chunk.slice()
+            yield chunk instanceof Uint8Array ? chunk : chunk.slice()
           }
         })())
       } catch (err) {

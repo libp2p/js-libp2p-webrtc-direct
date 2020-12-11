@@ -42,8 +42,12 @@
     "url": "https://github.com/libp2p/js-libp2p-webrtc-direct/issues"
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=6.0.0"
+  },
   "devDependencies": {
-    "aegir": "^20.3.1",
+    "aegir": "^29.2.2",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "it-pipe": "^1.1.0",
@@ -55,18 +59,19 @@
     "abortable-iterator": "^3.0.0",
     "class-is": "^1.1.0",
     "concat-stream": "^2.0.0",
-    "debug": "^4.1.1",
+    "debug": "^4.3.1",
     "detect-node": "^2.0.4",
     "err-code": "^2.0.0",
     "libp2p-interfaces": "libp2p/js-interfaces#chore/skip-abort-while-reading-for-webrtc",
     "libp2p-utils": "^0.2.3",
+    "libp2p-webrtc-peer": "^10.0.1",
     "mafmt": "^8.0.1",
-    "multibase": "~0.6.0",
+    "multibase": "^3.1.0",
     "once": "^1.4.0",
     "request": "^2.88.0",
-    "simple-peer": "9.6.0",
-    "stream-to-it": "^0.1.1",
-    "wrtc": "~0.4.2",
+    "stream-to-it": "^0.2.2",
+    "uint8arrays": "^1.1.0",
+    "wrtc": "~0.4.6",
     "xhr": "^2.5.0"
   },
   "contributors": [
