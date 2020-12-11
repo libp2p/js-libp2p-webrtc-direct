@@ -1,3 +1,13 @@
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.4.0...v0.4.1) (2020-12-11)
+
+
+### Bug Fixes
+
+* transport should not handle connection if upgradeInbound throws ([#32](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/32)) ([1711a7d](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/1711a7d))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.3.1...v0.4.0) (2019-10-02)
 
