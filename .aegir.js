@@ -23,8 +23,11 @@ function boot () {
   return listener.listen(ma)
 }
 
-function shutdown () {
-  return listener.close()
+async function shutdown () {
+  await listener.close()
+  // TODO: Temporary fix per wrtc issue
+  // https://github.com/node-webrtc/node-webrtc/issues/636
+  process.exit(0)
 }
 
 module.exports = {

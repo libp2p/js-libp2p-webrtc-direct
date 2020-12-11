@@ -21,12 +21,9 @@ const createListener = require('./listener')
 
 function noop () {}
 
-/**
- * @class WebRTCDirect
- */
 class WebRTCDirect {
   /**
-   * @constructor
+   * @class
    * @param {object} options
    * @param {Upgrader} options.upgrader
    */
@@ -36,11 +33,10 @@ class WebRTCDirect {
   }
 
   /**
-   * @async
    * @param {Multiaddr} ma
    * @param {object} options
    * @param {AbortSignal} options.signal Used to abort dial requests
-   * @returns {Connection} An upgraded Connection
+   * @returns {Promise<Connection>} An upgraded Connection
    */
   async dial (ma, options = {}) {
     const socket = await this._connect(ma, options)
@@ -113,6 +109,7 @@ class WebRTCDirect {
         channel.removeListener('error', onError)
         channel.removeListener('timeout', onTimeout)
         channel.removeListener('connect', onConnect)
+        channel.removeAllListeners('signal')
         options.signal && options.signal.removeEventListener('abort', onAbort)
 
         err ? reject(err) : resolve(channel)

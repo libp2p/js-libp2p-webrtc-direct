@@ -2,12 +2,13 @@
 
 const http = require('http')
 const EventEmitter = require('events')
-const log = require('debug')('libp2p:webrtcdirect:listener')
+const debug = require('debug')
+const log = debug('libp2p:webrtcdirect:listener')
+log.error = debug('libp2p:webrtcdirect:listener:error')
 
 const isNode = require('detect-node')
 const wrtc = require('wrtc')
 const SimplePeer = require('simple-peer')
-
 const multibase = require('multibase')
 
 const toConnection = require('./socket-to-conn')
@@ -37,19 +38,16 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     }
 
     const channel = new SimplePeer(options)
+
     const maConn = toConnection(channel, listener.__connections)
     log('new inbound connection %s', maConn.remoteAddr)
 
-    const conn = await upgrader.upgradeInbound(maConn)
-    log('inbound connection %s upgraded', maConn.remoteAddr)
-
-    trackConn(listener, maConn)
-
-    channel.on('connect', () => {
-      listener.emit('connection', conn)
-      handler(conn)
+    channel.on('error', (err) => {
+      log.error(`incoming connectioned errored with ${err}`)
     })
-
+    channel.once('close', () => {
+      channel.removeAllListeners('error')
+    })
     channel.on('signal', (signal) => {
       const signalStr = JSON.stringify(signal)
       const signalEncoded = multibase.encode('base58btc', Buffer.from(signalStr))
@@ -57,6 +55,25 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     })
 
     channel.signal(incSignal)
+
+    let conn
+    try {
+      conn = await upgrader.upgradeInbound(maConn)
+    } catch (err) {
+      log.error('inbound connection failed to upgrade', err)
+      return maConn.close()
+    }
+    log('inbound connection %s upgraded', maConn.remoteAddr)
+
+    trackConn(listener, maConn)
+
+    channel.on('connect', () => {
+      listener.emit('connection', conn)
+      handler(conn)
+
+      channel.removeAllListeners('connect')
+      channel.removeAllListeners('signal')
+    })
   })
 
   server.on('error', (err) => listener.emit('error', err))
