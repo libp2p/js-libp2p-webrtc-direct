@@ -53,6 +53,8 @@ module.exports = (socket, options = {}) => {
 
     timeline: { open: Date.now() },
 
+    transportTag: 'WebRTCDirect',
+
     close () {
       if (socket.destroyed) return
 
