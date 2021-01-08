@@ -11,6 +11,7 @@ const wrtc = require('wrtc')
 const SimplePeer = require('libp2p-webrtc-peer')
 const multibase = require('multibase')
 const toString = require('uint8arrays/to-string')
+const toMultiaddr = require('libp2p-utils/src/ip-port-to-multiaddr')
 
 const toConnection = require('./socket-to-conn')
 
@@ -40,7 +41,9 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
     const channel = new SimplePeer(options)
 
-    const maConn = toConnection(channel, listener.__connections)
+    const maConn = toConnection(channel, {
+      remoteAddr: toMultiaddr(req.connection.remoteAddress, req.connection.remotePort)
+    })
     log('new inbound connection %s', maConn.remoteAddr)
 
     channel.on('error', (err) => {
