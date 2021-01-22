@@ -97,5 +97,31 @@ describe('listen', () => {
     })
 
     expect(listener1.__connections).to.have.lengthOf(0)
+
+    await listener1.close()
+  })
+
+  it('should have remoteAddress in listener connection', async function () {
+    this.timeout(20e3)
+
+    const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+
+    const wd1 = new WebRTCDirect({ upgrader: mockUpgrader })
+    const listener1 = wd1.createListener((conn) => {
+      expect(conn.remoteAddr).to.exist()
+      pipe(conn, conn)
+    })
+
+    await listener1.listen(ma1)
+    const conn = await wd.dial(ma1)
+    expect(conn.remoteAddr).to.exist()
+
+    await conn.close()
+
+    // wait for listener to know of the disconnect
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000)
+    })
+    await listener1.close()
   })
 })

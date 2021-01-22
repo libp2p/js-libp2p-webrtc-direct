@@ -48,8 +48,7 @@ module.exports = (socket, options = {}) => {
       ? toMultiaddr(socket.localAddress, socket.localPort) : undefined,
 
     // If the remote address was passed, use it - it may have the peer ID encapsulated
-    remoteAddr: options.remoteAddr || (socket.remoteAddress && socket.remotePort
-      ? toMultiaddr(socket.remoteAddress, socket.remotePort) : undefined),
+    remoteAddr: options.remoteAddr,
 
     timeline: { open: Date.now() },
 
