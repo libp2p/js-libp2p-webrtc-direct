@@ -1,3 +1,12 @@
+# [0.5.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.4.1...v0.5.0) (2021-01-22)
+
+
+### Bug Fixes
+
+* add remote addr on listener connection ([#97](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/97)) ([c562a0d](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/c562a0d47288bcbb3cdb0fb1118a0899903f811b))
+
+
+
 <a name="0.4.1"></a>
 ## [0.4.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.4.0...v0.4.1) (2020-12-11)
 
