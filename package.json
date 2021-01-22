@@ -70,7 +70,7 @@
     "once": "^1.4.0",
     "request": "^2.88.0",
     "stream-to-it": "^0.2.2",
-    "uint8arrays": "^1.1.0",
+    "uint8arrays": "^2.0.5",
     "wrtc": "~0.4.6",
     "xhr": "^2.5.0"
   },
