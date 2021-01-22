@@ -11,6 +11,7 @@ const multiaddr = require('multiaddr')
 
 const pipe = require('it-pipe')
 const { collect } = require('streaming-iterables')
+const fromString = require('uint8arrays/from-string')
 
 const WebRTCDirect = require('../src')
 
@@ -31,7 +32,7 @@ describe('dial', function () {
 
   it('dial on IPv4', async () => {
     const conn = await wd.dial(ma)
-    const data = Buffer.from('some data')
+    const data = fromString('some data')
 
     const values = await pipe(
       [data],

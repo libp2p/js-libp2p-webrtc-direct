@@ -7,13 +7,14 @@ log.error = debug('libp2p:webrtcdirect:error')
 const errcode = require('err-code')
 
 const wrtc = require('wrtc')
-const SimplePeer = require('simple-peer')
+const SimplePeer = require('libp2p-webrtc-peer')
 const isNode = require('detect-node')
 const mafmt = require('mafmt')
 const multibase = require('multibase')
 const request = require('request')
 const withIs = require('class-is')
 const { AbortError } = require('abortable-iterator')
+const toString = require('uint8arrays/to-string')
 
 const { CODE_CIRCUIT, CODE_P2P } = require('./constants')
 const toConnection = require('./socket-to-conn')
@@ -35,7 +36,7 @@ class WebRTCDirect {
   /**
    * @param {Multiaddr} ma
    * @param {object} options
-   * @param {AbortSignal} options.signal Used to abort dial requests
+   * @param {AbortSignal} options.signal - Used to abort dial requests
    * @returns {Promise<Connection>} An upgraded Connection
    */
   async dial (ma, options = {}) {
@@ -51,7 +52,7 @@ class WebRTCDirect {
    * @private
    * @param {Multiaddr} ma
    * @param {object} options
-   * @param {AbortSignal} options.signal Used to abort dial requests
+   * @param {AbortSignal} options.signal - Used to abort dial requests
    * @returns {Promise<SimplePeer>} Resolves a SimplePeer Webrtc channel
    */
   _connect (ma, options = {}) {
@@ -124,7 +125,7 @@ class WebRTCDirect {
       channel.on('signal', (signal) => {
         const signalStr = JSON.stringify(signal)
         const url = 'http://' + cOpts.host + ':' + cOpts.port
-        const path = '/?signal=' + multibase.encode('base58btc', Buffer.from(signalStr))
+        const path = '/?signal=' + toString(multibase.encode('base58btc', new TextEncoder().encode(signalStr)))
         const uri = url + path
 
         request.get(uri, (err, res) => {
@@ -132,7 +133,7 @@ class WebRTCDirect {
             return reject(err)
           }
           const incSignalBuf = multibase.decode(res.body)
-          const incSignalStr = incSignalBuf.toString()
+          const incSignalStr = toString(incSignalBuf)
           const incSignal = JSON.parse(incSignalStr)
           channel.signal(incSignal)
         })
@@ -144,6 +145,7 @@ class WebRTCDirect {
    * Creates a WebrtcDirect listener. The provided `handler` function will be called
    * anytime a new incoming Connection has been successfully upgraded via
    * `upgrader.upgradeInbound`.
+   *
    * @param {*} [options]
    * @param {function(Connection)} handler
    * @returns {Listener} A WebrtcDirect listener
@@ -165,6 +167,7 @@ class WebRTCDirect {
 
   /**
    * Takes a list of `Multiaddr`s and returns only valid addresses
+   *
    * @param {Multiaddr[]} multiaddrs
    * @returns {Multiaddr[]} Valid multiaddrs
    */
