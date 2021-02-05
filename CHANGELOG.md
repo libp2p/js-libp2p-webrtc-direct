@@ -1,3 +1,12 @@
+## [0.5.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.5.0...v0.5.1) (2021-02-05)
+
+
+### Bug Fixes
+
+* lint ([3490d36](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/3490d3635c0167f3090925a68cc0b3cb78acb062))
+
+
+
 # [0.5.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.4.1...v0.5.0) (2021-01-22)
 
 

@@ -7,7 +7,7 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 
-const multiaddr = require('multiaddr')
+const { Multiaddr } = require('multiaddr')
 
 const pipe = require('it-pipe')
 const { collect } = require('streaming-iterables')
@@ -23,7 +23,7 @@ const mockUpgrader = {
 describe('dial', function () {
   this.timeout(20 * 1000)
 
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
+  const ma = new Multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
   let wd
 
   before(() => {
@@ -44,7 +44,7 @@ describe('dial', function () {
   })
 
   it('dial offline / non-existent node on IPv4, check callback', async () => {
-    const maOffline = multiaddr('/ip4/127.0.0.1/tcp/55555/http/p2p-webrtc-direct')
+    const maOffline = new Multiaddr('/ip4/127.0.0.1/tcp/55555/http/p2p-webrtc-direct')
 
     try {
       await wd.dial(maOffline, { config: {} })

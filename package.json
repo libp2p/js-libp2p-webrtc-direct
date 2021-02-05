@@ -21,9 +21,6 @@
     "release-major": "aegir release --type major --target node --target browser",
     "coverage": "nyc --reporter=text --reporter=lcov npm run test:node"
   },
-  "pre-push": [
-    "lint"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/libp2p/js-libp2p-webrtc-direct.git"
@@ -43,15 +40,14 @@
   },
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
   "engines": {
-    "node": ">=12.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=14.0.0"
   },
   "devDependencies": {
     "aegir": "^30.3.0",
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "dirty-chai": "^2.0.1",
     "it-pipe": "^1.1.0",
-    "multiaddr": "^8.1.1",
+    "multiaddr": "^9.0.1",
     "streaming-iterables": "^5.0.3",
     "webrtcsupport": "^2.2.0"
   },
@@ -63,10 +59,10 @@
     "detect-node": "^2.0.4",
     "err-code": "^3.0.0",
     "libp2p-interfaces": "libp2p/js-interfaces#chore/skip-abort-while-reading-for-webrtc",
-    "libp2p-utils": "^0.2.3",
+    "libp2p-utils": "^0.3.0",
     "libp2p-webrtc-peer": "^10.0.1",
     "mafmt": "^8.0.1",
-    "multibase": "^3.1.0",
+    "multibase": "^4.0.4",
     "once": "^1.4.0",
     "request": "^2.88.0",
     "stream-to-it": "^0.2.2",
