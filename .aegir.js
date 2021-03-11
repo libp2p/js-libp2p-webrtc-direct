@@ -31,8 +31,8 @@ async function shutdown () {
 }
 
 module.exports = {
-  hooks: {
-    pre: boot,
-    post: shutdown
+  test: {
+    before: boot,
+    after: shutdown
   }
 }
