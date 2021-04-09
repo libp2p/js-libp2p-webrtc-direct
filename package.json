@@ -51,7 +51,7 @@
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "it-pipe": "^1.1.0",
-    "multiaddr": "^8.1.1",
+    "multiaddr": "^9.0.1",
     "streaming-iterables": "^5.0.3",
     "webrtcsupport": "^2.2.0"
   },
