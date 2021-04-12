@@ -65,7 +65,7 @@
     "libp2p-interfaces": "libp2p/js-interfaces#chore/skip-abort-while-reading-for-webrtc",
     "libp2p-utils": "^0.2.3",
     "libp2p-webrtc-peer": "^10.0.1",
-    "mafmt": "^8.0.1",
+    "mafmt": "^9.0.0",
     "multibase": "^3.1.0",
     "once": "^1.4.0",
     "request": "^2.88.0",
