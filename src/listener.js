@@ -102,13 +102,13 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     })
   }
 
-  listener.close = () => {
+  listener.close = async () => {
     if (!server.listening) {
       return
     }
 
+    await Promise.all(listener.__connections.map(c => c.close()))
     return new Promise((resolve, reject) => {
-      listener.__connections.forEach(maConn => maConn.close())
       server.close((err) => err ? reject(err) : resolve())
     })
   }
