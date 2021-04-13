@@ -22,6 +22,10 @@ const createListener = require('./listener')
 
 function noop () {}
 
+/**
+ * @typedef {import('multiaddr').Multiaddr} Multiaddr
+ */
+
 class WebRTCDirect {
   /**
    * @class

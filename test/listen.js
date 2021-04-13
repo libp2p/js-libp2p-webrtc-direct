@@ -7,7 +7,7 @@ const dirtyChai = require('dirty-chai')
 const expect = chai.expect
 chai.use(dirtyChai)
 
-const multiaddr = require('multiaddr')
+const { Multiaddr } = require('multiaddr')
 const pipe = require('it-pipe')
 
 const WebRTCDirect = require('../src')
@@ -20,7 +20,7 @@ const mockUpgrader = {
 describe('listen', () => {
   let wd
 
-  const ma = multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
+  const ma = new Multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
 
   before(() => {
     wd = new WebRTCDirect({ upgrader: mockUpgrader })
@@ -78,7 +78,7 @@ describe('listen', () => {
   it('should untrack conn after being closed', async function () {
     this.timeout(20e3)
 
-    const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+    const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
 
     const wd1 = new WebRTCDirect({ upgrader: mockUpgrader })
     const listener1 = wd1.createListener((conn) => pipe(conn, conn))
@@ -104,7 +104,7 @@ describe('listen', () => {
   it('should have remoteAddress in listener connection', async function () {
     this.timeout(20e3)
 
-    const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+    const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
 
     const wd1 = new WebRTCDirect({ upgrader: mockUpgrader })
     const listener1 = wd1.createListener((conn) => {
