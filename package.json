@@ -59,7 +59,7 @@
     "detect-node": "^2.0.4",
     "err-code": "^3.0.0",
     "libp2p-interfaces": "libp2p/js-interfaces#chore/skip-abort-while-reading-for-webrtc",
-    "libp2p-utils": "^0.3.0",
+    "libp2p-utils": "^0.4.0",
     "libp2p-webrtc-peer": "^10.0.1",
     "mafmt": "^9.0.0",
     "multibase": "^4.0.4",
