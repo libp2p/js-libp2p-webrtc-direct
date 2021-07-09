@@ -1,3 +1,17 @@
+# [0.7.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.6.0...v0.7.0) (2021-07-09)
+
+
+### chore
+
+* update deps ([#128](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/128)) ([d574b7d](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/d574b7df1fa40250ef7ead448d362fd55a6eb974))
+
+
+### BREAKING CHANGES
+
+* uses new peer id, multiaddr, etc
+
+
+
 # [0.6.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.5.1...v0.6.0) (2021-04-13)
 
 
