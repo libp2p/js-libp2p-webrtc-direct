@@ -9,8 +9,9 @@ log.error = debug('libp2p:webrtcdirect:listener:error')
 const isNode = require('detect-node')
 const wrtc = require('wrtc')
 const SimplePeer = require('libp2p-webrtc-peer')
-const multibase = require('multibase')
+const { base58btc } = require('multiformats/bases/base58')
 const toString = require('uint8arrays/to-string')
+const fromString = require('uint8arrays/from-string')
 const toMultiaddr = require('libp2p-utils/src/ip-port-to-multiaddr')
 
 const toConnection = require('./socket-to-conn')
@@ -30,7 +31,7 @@ module.exports = ({ handler, upgrader }, options = {}) => {
 
     const path = req.url
     const incSignalStr = path.split('?signal=')[1]
-    const incSignalBuf = multibase.decode(incSignalStr)
+    const incSignalBuf = base58btc.decode(incSignalStr)
     const incSignal = JSON.parse(toString(incSignalBuf))
 
     options = {
@@ -54,8 +55,8 @@ module.exports = ({ handler, upgrader }, options = {}) => {
     })
     channel.on('signal', (signal) => {
       const signalStr = JSON.stringify(signal)
-      const signalEncoded = multibase.encode('base58btc', new TextEncoder().encode(signalStr))
-      res.end(toString(signalEncoded))
+      const signalEncoded = base58btc.encode(fromString(signalStr))
+      res.end(Buffer.from(signalEncoded))
     })
 
     channel.signal(incSignal)
