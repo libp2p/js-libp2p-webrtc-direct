@@ -43,13 +43,14 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
-    "aegir": "^33.2.2",
+    "aegir": "^35.0.1",
     "chai": "^4.3.4",
     "dirty-chai": "^2.0.1",
     "it-pipe": "^1.1.0",
     "libp2p-interfaces-compliance-tests": "https://gitpkg.now.sh/libp2p/js-libp2p-interfaces/packages/compliance-tests?chore/skip-abort-while-reading-for-webrtc",
     "multiaddr": "^10.0.0",
     "streaming-iterables": "^6.0.0",
+    "util": "^0.12.4",
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
@@ -62,11 +63,11 @@
     "libp2p-utils": "^0.4.1",
     "libp2p-webrtc-peer": "^10.0.1",
     "mafmt": "^10.0.0",
-    "multiformats": "^9.2.0",
+    "multiformats": "^9.4.5",
     "once": "^1.4.0",
     "request": "^2.88.0",
     "stream-to-it": "^0.2.2",
-    "uint8arrays": "^2.1.2",
+    "uint8arrays": "^3.0.0",
     "wrtc": "~0.4.6",
     "xhr": "^2.5.0"
   },

@@ -11,7 +11,7 @@ const { Multiaddr } = require('multiaddr')
 
 const pipe = require('it-pipe')
 const { collect } = require('streaming-iterables')
-const fromString = require('uint8arrays/from-string')
+const { fromString } = require('uint8arrays/from-string')
 
 const WebRTCDirect = require('../src')
 
