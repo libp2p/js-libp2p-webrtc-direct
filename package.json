@@ -43,7 +43,7 @@
     "node": ">=14.0.0"
   },
   "devDependencies": {
-    "aegir": "^33.2.2",
+    "aegir": "^35.0.3",
     "chai": "^4.3.4",
     "dirty-chai": "^2.0.1",
     "it-pipe": "^1.1.0",
