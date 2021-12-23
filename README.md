@@ -34,6 +34,8 @@
 > npm install libp2p-webrtc-direct
 ```
 
+**NOTE:** To run build scripts `node-pre-gyp` is required. You can install it by running `npm install -g node-pre-gyp`.
+
 ## Usage
 
 ```js
