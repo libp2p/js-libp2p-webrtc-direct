@@ -46,7 +46,7 @@
     "aegir": "^36.0.0",
     "chai": "^4.3.4",
     "dirty-chai": "^2.0.1",
-    "it-pipe": "^1.1.0",
+    "it-pipe": "^2.0.0",
     "libp2p-interfaces-compliance-tests": "https://gitpkg.now.sh/libp2p/js-libp2p-interfaces/packages/compliance-tests?chore/skip-abort-while-reading-for-webrtc",
     "multiaddr": "^10.0.0",
     "streaming-iterables": "^6.0.0",
