@@ -44,9 +44,7 @@ module.exports = (socket, options = {}) => {
 
     conn: socket,
 
-    localAddr: socket.localAddress && socket.localPort
-      ? toMultiaddr(socket.localAddress, socket.localPort)
-      : undefined,
+    localAddr: toLocalAddr(socket),
 
     // If the remote address was passed, use it - it may have the peer ID encapsulated
     remoteAddr: options.remoteAddr,
@@ -97,4 +95,16 @@ module.exports = (socket, options = {}) => {
   })
 
   return maConn
+}
+
+/**
+ * Get local multiaddr from socket.
+ *
+ * @param {SimplePeer} socket
+ * @returns {Multiaddr|undefined}
+ */
+function toLocalAddr (socket) {
+  return socket.localAddress && socket.localPort
+    ? toMultiaddr(socket.localAddress, socket.localPort)
+    : undefined
 }
