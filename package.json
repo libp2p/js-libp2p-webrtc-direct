@@ -30,9 +30,7 @@
     "webrtc",
     "dial",
     "stream",
-    "connection",
-    "woot",
-    "woot"
+    "connection"
   ],
   "license": "MIT",
   "bugs": {
