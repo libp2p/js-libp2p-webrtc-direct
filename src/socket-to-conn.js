@@ -104,7 +104,11 @@ module.exports = (socket, options = {}) => {
  * @returns {Multiaddr|undefined}
  */
 function toLocalAddr (socket) {
-  return socket.localAddress && socket.localPort
-    ? toMultiaddr(socket.localAddress, socket.localPort)
-    : undefined
+  if (socket.localAddress && socket.localPort) {
+    try {
+      return toMultiaddr(socket.localAddress, socket.localPort)
+    } catch {
+      // Might fail if the socket.localAddress is fqdn
+    }
+  }
 }
