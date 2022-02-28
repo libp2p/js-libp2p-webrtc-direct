@@ -8,8 +8,8 @@
 [![](https://img.shields.io/travis/libp2p/js-libp2p-webrtc-direct.svg?style=flat-square)](https://travis-ci.com/libp2p/js-libp2p-webrtc-direct)
 [![Dependency Status](https://david-dm.org/libp2p/js-libp2p-webrtc-direct.svg?style=flat-square)](https://david-dm.org/libp2p/js-libp2p-webrtc-direct) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/feross/standard)
 
-![](https://raw.githubusercontent.com/libp2p/interface-connection/master/img/badge.png)
-![](https://raw.githubusercontent.com/libp2p/interface-transport/master/img/badge.png)
+![](https://raw.githubusercontent.com/libp2p/js-libp2p-interfaces/master/packages/libp2p-interfaces/src/connection/img/badge.png)
+![](https://raw.githubusercontent.com/libp2p/js-libp2p-interfaces/master/packages/libp2p-interfaces/src/transport/img/badge.png)
 
 > A WebRTC transport built for libp2p (not mandatory to use with libp2p) that doesn't require the set up a signalling server. Caveat, you can only establish Browser to Node.js and Node.js to Node.js connections.
 
@@ -23,7 +23,6 @@
   - [npm](#npm)
 - [Usage](#usage)
 - [API](#api)
-- [Pull-streams](#pull-streams)
 
 
 ## Install
@@ -44,30 +43,35 @@ const multiaddr = require('multiaddr')
 const pipe = require('pull-stream')
 const { collect } = require('streaming-iterables')
 
-const addr = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+;(async () => {
+  const addr = new multiaddr.Multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+  const upgrader = {
+    upgradeInbound: async maConn => maConn,
+    upgradeOutbound: async maConn => maConn,
+  }
+  const webRTCDirect = new WebRTCDirect({upgrader})
 
-const webRTCDirect = new WebRTCDirect()
+  const listener = webRTCDirect.createListener((socket) => {
+    console.log('new connection opened')
+    pipe(
+            ['hello'],
+            socket
+    )
+  })
 
-const listener = webRTCDirect.createListener((socket) => {
-  console.log('new connection opened')
-  pipe(
-    ['hello'],
-    socket
+  await listener.listen(addr)
+  console.log('listening')
+
+  const conn = await webRTCDirect.dial(addr)
+  const values = await pipe(
+          conn,
+          collect
   )
-})
+  console.log(`Value: ${values.toString()}`)
 
-await listener.listen(addr)
-console.log('listening')
-
-const conn = await webRTCDirect.dial(addr)
-const values = await pipe(
-  conn,
-  collect
-)
-console.log(`Value: ${values.toString()}`)
-
-// Close connection after reading
-await listener.close()
+  // Close connection after reading
+  await listener.close()
+})()
 ```
 
 Outputs:
@@ -83,11 +87,11 @@ Note that it may take some time for the connection to be established.
 
 ### Transport
 
-[![](https://raw.githubusercontent.com/libp2p/interface-transport/master/img/badge.png)](https://github.com/libp2p/interface-transport)
+[![](https://raw.githubusercontent.com/libp2p/js-libp2p-interfaces/master/packages/libp2p-interfaces/src/transport/img/badge.png)](https://github.com/libp2p/js-libp2p-interfaces/tree/master/packages/libp2p-interfaces/src/transport)
 
 ### Connection
 
-[![](https://raw.githubusercontent.com/libp2p/interface-connection/master/img/badge.png)](https://github.com/libp2p/interface-connection)
+[![](https://raw.githubusercontent.com/libp2p/js-libp2p-interfaces/master/packages/libp2p-interfaces/src/connection/img/badge.png)](https://github.com/libp2p/js-libp2p-interfaces/tree/master/packages/libp2p-interfaces/src/connection)
 
 ## Contribute
 
