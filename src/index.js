@@ -11,7 +11,7 @@ const SimplePeer = require('libp2p-webrtc-peer')
 const isNode = require('detect-node')
 const mafmt = require('mafmt')
 const { base58btc } = require('multiformats/bases/base58')
-const fetch = require('node-fetch')
+const { fetch } = require('native-fetch')
 const withIs = require('class-is')
 const { AbortError } = require('abortable-iterator')
 const { toString } = require('uint8arrays/to-string')
@@ -131,18 +131,17 @@ class WebRTCDirect {
         const signalStr = JSON.stringify(signal)
         const url = 'http://' + cOpts.host + ':' + cOpts.port
         const path = '/?signal=' + base58btc.encode(fromString(signalStr))
-
         const uri = url + path
 
-        try {
-          const res = await fetch(uri)
-          const incSignalBuf = base58btc.decode(await res.text())
-          const incSignalStr = toString(incSignalBuf)
-          const incSignal = JSON.parse(incSignalStr)
-          channel.signal(incSignal)
-        } catch (err) {
-          reject(err)
-        }
+        fetch(uri)
+          .then(res => res.text())
+          .then(body => {
+            const incSignalBuf = base58btc.decode(body)
+            const incSignalStr = toString(incSignalBuf)
+            const incSignal = JSON.parse(incSignalStr)
+            channel.signal(incSignal)
+          })
+          .catch(err => reject(err))
       })
     })
   }
