@@ -133,15 +133,15 @@ class WebRTCDirect {
         const path = '/?signal=' + base58btc.encode(fromString(signalStr))
         const uri = url + path
 
-        fetch(uri)
-          .then(res => res.text())
-          .then(body => {
-            const incSignalBuf = base58btc.decode(body)
-            const incSignalStr = toString(incSignalBuf)
-            const incSignal = JSON.parse(incSignalStr)
-            channel.signal(incSignal)
-          })
-          .catch(err => reject(err))
+        try {
+          const res = await fetch(uri)
+          const incSignalBuf = base58btc.decode(await res.text())
+          const incSignalStr = toString(incSignalBuf)
+          const incSignal = JSON.parse(incSignalStr)
+          channel.signal(incSignal)
+        } catch (err) {
+          reject(err)
+        }
       })
     })
   }
