@@ -62,10 +62,11 @@
     "libp2p-webrtc-peer": "^10.0.1",
     "mafmt": "^10.0.0",
     "multiformats": "^9.4.5",
+    "native-fetch": "^4.0.2",
     "once": "^1.4.0",
-    "request": "^2.88.0",
     "stream-to-it": "^0.2.2",
     "uint8arrays": "^3.0.0",
+    "undici": "^4.14.1",
     "wrtc": "~0.4.6",
     "xhr": "^2.5.0"
   },
