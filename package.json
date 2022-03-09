@@ -40,6 +40,25 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "type": "module",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "src",
+    "dist/src",
+    "!dist/test",
+    "!**/*.tsbuildinfo"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "ipfs",
+    "parserOptions": {
+      "sourceType": "module"
+    }
+  },
   "devDependencies": {
     "aegir": "^36.0.0",
     "chai": "^4.3.4",
@@ -52,10 +71,9 @@
     "webrtcsupport": "^2.2.0"
   },
   "dependencies": {
+    "@libp2p/logger": "^1.0.2",
     "abortable-iterator": "^3.0.0",
-    "class-is": "^1.1.0",
     "concat-stream": "^2.0.0",
-    "debug": "^4.3.1",
     "detect-node": "^2.0.4",
     "err-code": "^3.0.0",
     "libp2p-utils": "^0.4.1",

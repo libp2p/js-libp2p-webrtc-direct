@@ -1,24 +1,38 @@
-'use strict'
-
 const abortable = require('abortable-iterator')
-const toIterable = require('stream-to-it')
+import { logger } from '@libp2p/logger'
+// @ts-expect-error no types
+import toIterable from 'stream-to-it'
+// @ts-expect-error no types
+import { ipPortToMultiaddr as toMultiaddr } from '@libp2p/utils/ip-port-to-multiaddr'
+import { CLOSE_TIMEOUT } from './constants'
+// @ts-expect-error no types
+import type Peer from 'libp2p-webrtc-peer'
+import type { Multiaddr } from '@multiformats/multiaddr'
+import type { MultiaddrConnection } from '@libp2p/interfaces/transport'
 
-const { CLOSE_TIMEOUT } = require('./constants')
-const toMultiaddr = require('libp2p-utils/src/ip-port-to-multiaddr')
+const log = logger('libp2p:webrtcdirect:socket')
 
-const debug = require('debug')
-const log = debug('libp2p:webrtcdirect:socket')
-log.error = debug('libp2p:webrtcdirect:socket:error')
+export interface ExtendedMultiaddrConnection extends MultiaddrConnection{
+  conn: Peer
+}
 
-// Convert a socket into a MultiaddrConnection
-// https://github.com/libp2p/interface-transport#multiaddrconnection
+interface ToConnectionOptions {
+  listeningAddr?: Multiaddr
+  remoteAddr?: Multiaddr
+  localAddr?: Multiaddr
+  signal?: AbortSignal
+}
 
-module.exports = (socket, options = {}) => {
+/**
+ * Convert a socket into a MultiaddrConnection
+ * https://github.com/libp2p/interface-transport#multiaddrconnection
+ */
+export const toMultiaddrConnection = (socket: Peer, options?: ToConnectionOptions) => {
+  options = options ?? {}
   const { sink, source } = toIterable.duplex(socket)
-
-  const maConn = {
+  const maConn: ExtendedMultiaddrConnection = {
     async sink (source) {
-      if (options.signal) {
+      if ((options?.signal) != null) {
         source = abortable(source, options.signal)
       }
 
@@ -29,7 +43,7 @@ module.exports = (socket, options = {}) => {
             yield chunk instanceof Uint8Array ? chunk : chunk.slice()
           }
         })())
-      } catch (err) {
+      } catch (err: any) {
         // If aborted we can safely ignore
         if (err.type !== 'aborted') {
           // If the source errored the socket will already have been destroyed by
@@ -47,11 +61,11 @@ module.exports = (socket, options = {}) => {
     localAddr: toLocalAddr(socket),
 
     // If the remote address was passed, use it - it may have the peer ID encapsulated
-    remoteAddr: options.remoteAddr,
+    remoteAddr: options.remoteAddr ?? toMultiaddr(socket.remoteAddress ?? '', socket.remotePort ?? ''),
 
     timeline: { open: Date.now() },
 
-    close () {
+    async close () {
       if (socket.destroyed) return
 
       return new Promise((resolve, reject) => {
@@ -75,7 +89,7 @@ module.exports = (socket, options = {}) => {
           resolve()
         })
 
-        socket.end((err) => {
+        socket.end((err?: Error & { code?: string }) => {
           clearTimeout(timeout)
 
           maConn.timeline.close = Date.now()

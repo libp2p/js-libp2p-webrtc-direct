@@ -1,66 +1,54 @@
-'use strict'
+import { logger } from '@libp2p/logger'
+import errcode from 'err-code'
+// @ts-expect-error no types
+import wrtc from 'wrtc'
+// @ts-expect-error no types
+import SimplePeer from 'libp2p-webrtc-peer'
+// @ts-expect-error no types
+import isNode from 'detect-node'
+import mafmt from 'mafmt'
+import { base58btc } from 'multiformats/bases/base58'
+import { fetch } from 'native-fetch'
+import { AbortError } from 'abortable-iterator'
+import { toString } from 'uint8arrays/to-string'
+import { fromString } from 'uint8arrays/from-string'
+import { CODE_CIRCUIT, CODE_P2P } from './constants'
+import { toMultiaddrConnection } from './socket-to-conn'
+import { createListener } from './listener'
 
-const assert = require('debug')
-const debug = require('debug')
-const log = debug('libp2p:webrtcdirect')
-log.error = debug('libp2p:webrtcdirect:error')
-const errcode = require('err-code')
+import type { AbortOptions } from '@libp2p/interfaces'
+import type { Listener, ListenerOptions, Transport, Upgrader } from '@libp2p/interfaces/transport'
+import type { Multiaddr } from '@multiformats/multiaddr'
 
-const wrtc = require('wrtc')
-const SimplePeer = require('libp2p-webrtc-peer')
-const isNode = require('detect-node')
-const mafmt = require('mafmt')
-const { base58btc } = require('multiformats/bases/base58')
-const { fetch } = require('native-fetch')
-const withIs = require('class-is')
-const { AbortError } = require('abortable-iterator')
-const { toString } = require('uint8arrays/to-string')
-const { fromString } = require('uint8arrays/from-string')
+const log = logger('libp2p:webrtcdirect')
 
-const { CODE_CIRCUIT, CODE_P2P } = require('./constants')
-const toConnection = require('./socket-to-conn')
-const createListener = require('./listener')
+export interface WebRTCDirectListenerOptions extends ListenerOptions{
+  channelOptions?: Object
+}
 
-function noop () {}
+export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
+  private readonly _upgrader: Upgrader
 
-/**
- * @typedef {import('multiaddr').Multiaddr} Multiaddr
- */
+  constructor (options: {upgrader: Upgrader}) {
+    const { upgrader } = options
 
-class WebRTCDirect {
-  /**
-   * @class
-   * @param {object} options
-   * @param {Upgrader} options.upgrader
-   */
-  constructor ({ upgrader }) {
-    assert(upgrader, 'An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+    if (upgrader == null) {
+      throw new Error('An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
+    }
+
     this._upgrader = upgrader
   }
 
-  /**
-   * @param {Multiaddr} ma
-   * @param {object} options
-   * @param {AbortSignal} options.signal - Used to abort dial requests
-   * @returns {Promise<Connection>} An upgraded Connection
-   */
-  async dial (ma, options = {}) {
+  async dial (ma: Multiaddr, options: AbortOptions = {}) {
     const socket = await this._connect(ma, options)
-    const maConn = toConnection(socket, { remoteAddr: ma, signal: options.signal })
+    const maConn = toMultiaddrConnection(socket, {remoteAddr: ma, signal: options.signal})
     log('new outbound connection %s', maConn.remoteAddr)
     const conn = await this._upgrader.upgradeOutbound(maConn)
     log('outbound connection %s upgraded', maConn.remoteAddr)
     return conn
   }
 
-  /**
-   * @private
-   * @param {Multiaddr} ma
-   * @param {object} options
-   * @param {AbortSignal} options.signal - Used to abort dial requests
-   * @returns {Promise<SimplePeer>} Resolves a SimplePeer Webrtc channel
-   */
-  _connect (ma, options = {}) {
+  async _connect (ma: Multiaddr, options:any ={}) {
     if (options.signal && options.signal.aborted) {
       throw new AbortError()
     }
@@ -74,14 +62,14 @@ class WebRTCDirect {
 
     return new Promise((resolve, reject) => {
       const start = Date.now()
-      let connected
+      let connected: boolean
 
       const cOpts = ma.toOptions()
       log('Dialing %s:%s', cOpts.host, cOpts.port)
 
       const channel = new SimplePeer(options)
 
-      const onError = (err) => {
+      const onError = (err: Error) => {
         if (!connected) {
           const msg = `connection error ${cOpts.host}:${cOpts.port}: ${err.message}`
 
@@ -111,7 +99,7 @@ class WebRTCDirect {
         done(new AbortError())
       }
 
-      const done = (err) => {
+      const done = (err: Error | null) => {
         channel.removeListener('error', onError)
         channel.removeListener('timeout', onTimeout)
         channel.removeListener('connect', onConnect)
@@ -150,33 +138,19 @@ class WebRTCDirect {
    * Creates a WebrtcDirect listener. The provided `handler` function will be called
    * anytime a new incoming Connection has been successfully upgraded via
    * `upgrader.upgradeInbound`.
-   *
-   * @param {*} [options]
-   * @param {function(Connection)} handler
-   * @returns {Listener} A WebrtcDirect listener
    */
-  createListener (options = {}, handler) {
+  createListener (options?: WebRTCDirectListenerOptions): Listener {
     if (!isNode) {
       throw errcode(new Error('Can\'t listen if run from the Browser'), 'ERR_NO_SUPPORT_FROM_BROWSER')
     }
 
-    if (typeof options === 'function') {
-      handler = options
-      options = {}
-    }
-
-    handler = handler || noop
-
-    return createListener({ handler, upgrader: this._upgrader }, options)
+    return createListener(this._upgrader, options)
   }
 
   /**
    * Takes a list of `Multiaddr`s and returns only valid addresses
-   *
-   * @param {Multiaddr[]} multiaddrs
-   * @returns {Multiaddr[]} Valid multiaddrs
    */
-  filter (multiaddrs) {
+  filter (multiaddrs: Multiaddr[]): Multiaddr[] {
     multiaddrs = Array.isArray(multiaddrs) ? multiaddrs : [multiaddrs]
 
     return multiaddrs.filter((ma) => {
@@ -188,5 +162,3 @@ class WebRTCDirect {
     })
   }
 }
-
-module.exports = withIs(WebRTCDirect, { className: 'WebRTCDirect', symbolName: '@libp2p/js-libp2p-webrtc-direct/webrtcdirect' })
