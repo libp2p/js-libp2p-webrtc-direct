@@ -26,6 +26,10 @@ export interface WebRTCDirectListenerOptions extends ListenerOptions{
   channelOptions?: Object
 }
 
+export interface WebRTCDirectDialOptions extends AbortOptions{
+  channelOptions?: Object
+}
+
 export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
   private readonly _upgrader: Upgrader
 
@@ -39,7 +43,7 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
     this._upgrader = upgrader
   }
 
-  async dial (ma: Multiaddr, options: AbortOptions = {}) {
+  async dial (ma: Multiaddr, options: WebRTCDirectDialOptions = {}) {
     const socket = await this._connect(ma, options)
     const maConn = toMultiaddrConnection(socket, {remoteAddr: ma, signal: options.signal})
     log('new outbound connection %s', maConn.remoteAddr)
@@ -48,16 +52,16 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
     return conn
   }
 
-  async _connect (ma: Multiaddr, options:any ={}) {
+  async _connect (ma: Multiaddr, options:WebRTCDirectDialOptions = {}) {
     if (options.signal && options.signal.aborted) {
       throw new AbortError()
     }
 
-    options = {
+    const channelOptions = {
       initiator: true,
       trickle: false,
       wrtc: isNode ? wrtc : undefined,
-      ...options
+      ...options?.channelOptions
     }
 
     return new Promise((resolve, reject) => {
@@ -67,7 +71,7 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
       const cOpts = ma.toOptions()
       log('Dialing %s:%s', cOpts.host, cOpts.port)
 
-      const channel = new SimplePeer(options)
+      const channel = new SimplePeer(channelOptions)
 
       const onError = (err: Error) => {
         if (!connected) {
