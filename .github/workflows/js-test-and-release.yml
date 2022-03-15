@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: lts/*
+      - run: npm install -g @mapbox/node-pre-gyp
       - uses: ipfs/aegir/actions/cache-node-modules@master
       - run: npm run --if-present lint
       - run: npm run --if-present dep-check
