@@ -30,7 +30,7 @@ interface WebRTCDirectListener extends Listener {
 
 export function createListener (upgrader: Upgrader, options?: WebRTCDirectListenerOptions) {
   const handler = options?.handler
-  const channelOptions = options?.channelOptions
+  const peerOptions = options?.peerOptions
   const server = http.createServer()
 
   let maSelf: Multiaddr
@@ -54,7 +54,7 @@ export function createListener (upgrader: Upgrader, options?: WebRTCDirectListen
     const channel = new SimplePeer({
       trickle: false,
       wrtc: isNode ? wrtc : undefined,
-      ...channelOptions
+      ...peerOptions
     })
 
     const maConn = toMultiaddrConnection(channel, {

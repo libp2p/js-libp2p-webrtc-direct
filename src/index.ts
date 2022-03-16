@@ -22,12 +22,24 @@ import type { Multiaddr } from '@multiformats/multiaddr'
 
 const log = logger('libp2p:webrtcdirect')
 
+interface SimplePeerOptions {
+  channelConfig?: Object,
+  channelName?: string,
+  config?: Object,
+  offerOptions?: Object,
+  answerOptions?: Object,
+  sdpTransform?: <T>(sdp: T) => T,
+  stream?: boolean,
+  streams?: any[],
+  objectMode?: boolean
+}
+
 export interface WebRTCDirectListenerOptions extends ListenerOptions{
-  channelOptions?: Object
+  peerOptions?: SimplePeerOptions
 }
 
 export interface WebRTCDirectDialOptions extends AbortOptions{
-  channelOptions?: Object
+  peerOptions?: SimplePeerOptions
 }
 
 export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
@@ -57,11 +69,11 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
       throw new AbortError()
     }
 
-    const channelOptions = {
+    const peerOptions = {
       initiator: true,
       trickle: false,
       wrtc: isNode ? wrtc : undefined,
-      ...options?.channelOptions
+      ...options?.peerOptions
     }
 
     return new Promise((resolve, reject) => {
@@ -71,7 +83,7 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
       const cOpts = ma.toOptions()
       log('Dialing %s:%s', cOpts.host, cOpts.port)
 
-      const channel = new SimplePeer(channelOptions)
+      const channel = new SimplePeer(peerOptions)
 
       const onError = (err: Error) => {
         if (!connected) {
