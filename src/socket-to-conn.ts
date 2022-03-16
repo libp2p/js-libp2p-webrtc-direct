@@ -18,7 +18,7 @@ export interface ExtendedMultiaddrConnection extends MultiaddrConnection{
 
 interface ToConnectionOptions {
   listeningAddr?: Multiaddr
-  remoteAddr?: Multiaddr
+  remoteAddr: Multiaddr
   localAddr?: Multiaddr
   signal?: AbortSignal
 }
@@ -27,8 +27,7 @@ interface ToConnectionOptions {
  * Convert a socket into a MultiaddrConnection
  * https://github.com/libp2p/interface-transport#multiaddrconnection
  */
-export const toMultiaddrConnection = (socket: Peer, options?: ToConnectionOptions) => {
-  options = options ?? {}
+export const toMultiaddrConnection = (socket: Peer, options: ToConnectionOptions) => {
   const { sink, source } = toIterable.duplex(socket)
   const maConn: ExtendedMultiaddrConnection = {
     async sink (source) {
@@ -60,8 +59,7 @@ export const toMultiaddrConnection = (socket: Peer, options?: ToConnectionOption
 
     localAddr: toLocalAddr(socket),
 
-    // If the remote address was passed, use it - it may have the peer ID encapsulated
-    remoteAddr: options.remoteAddr ?? toMultiaddr(socket.remoteAddress ?? '', socket.remotePort ?? ''),
+    remoteAddr: options.remoteAddr,
 
     timeline: { open: Date.now() },
 

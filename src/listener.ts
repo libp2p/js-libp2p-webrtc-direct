@@ -36,6 +36,13 @@ export function createListener (upgrader: Upgrader, options?: WebRTCDirectListen
   let maSelf: Multiaddr
 
   server.on('request', async (req: IncomingMessage, res: ServerResponse) => {
+    if (!req?.socket?.remoteAddress || !req?.socket.remotePort || !req.url) {
+      const err = new Error('Invalid listener request. Specify request\'s url, remoteAddress, remotePort.')
+      log.error(err)
+      res.writeHead(500);
+      res.end(err);
+      return
+    }
     res.setHeader('Content-Type', 'text/plain')
     res.setHeader('Access-Control-Allow-Origin', '*')
 
