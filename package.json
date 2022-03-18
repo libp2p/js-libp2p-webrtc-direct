@@ -97,9 +97,7 @@
     "test": "aegir test --target node --target browser --timeout 60000 -- --exit",
     "test:node": "aegir test --target node --timeout 60000 -- --exit",
     "test:browser": "aegir test --target browser --timeout 60000 -- --exit",
-    "release": "aegir release --target node --target browser",
-    "release-minor": "aegir release --type minor --target node --target browser",
-    "release-major": "aegir release --type major --target node --target browser",
+    "release": "semantic-release",
     "coverage": "nyc --reporter=text --reporter=lcov npm run test:node"
   },
   "repository": {
