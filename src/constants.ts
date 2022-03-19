@@ -1,4 +1,3 @@
-'use strict'
 
 // p2p multi-address code
 export const CODE_P2P = 421

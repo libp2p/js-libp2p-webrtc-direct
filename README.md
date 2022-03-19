@@ -1,4 +1,4 @@
-# js-libp2p-webrtc-direct
+# js-libp2p-webrtc-direct <!-- omit in toc -->
 
 [![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://protocol.ai)
 [![](https://img.shields.io/badge/project-libp2p-yellow.svg?style=flat-square)](http://libp2p.io/)
@@ -13,24 +13,20 @@
 
 > A WebRTC transport built for libp2p (not mandatory to use with libp2p) that doesn't require the set up a signalling server. Caveat, you can only establish Browser to Node.js and Node.js to Node.js connections.
 
-## Lead Maintainer
-
-[Vasco Santos](https://github.com/vasco-santos).
-
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
 - [Install](#install)
-  - [npm](#npm)
 - [Usage](#usage)
 - [API](#api)
-
+  - [Transport](#transport)
+  - [Connection](#connection)
+- [Contribute](#contribute)
+- [License](#license)
 
 ## Install
 
-### npm
-
 ```bash
-> npm install libp2p-webrtc-direct
+> npm install @libp2p/webrtc-direct
 ```
 
 **NOTE:** To run build scripts `node-pre-gyp` is required. You can install it by running `npm install -g node-pre-gyp`.
@@ -38,40 +34,43 @@
 ## Usage
 
 ```js
-const WebRTCDirect = require('libp2p-webrtc-direct')
-const multiaddr = require('multiaddr')
-const pipe = require('pull-stream')
-const { collect } = require('streaming-iterables')
+import { WebRTCDirect } from '@libp2p/webrtc-direct'
+import { Multiaddr } from '@multiformats/multiaddr'
+import { pipe } from 'it-pipe'
+import all from 'it-all'
 
-;(async () => {
-  const addr = new multiaddr.Multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
-  const upgrader = {
-    upgradeInbound: async maConn => maConn,
-    upgradeOutbound: async maConn => maConn,
-  }
-  const webRTCDirect = new WebRTCDirect({upgrader})
+const ECHO_PROTOCOL = '/echo/1.0.0'
+const addr = new Multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+const webRTCDirect = new WebRTCDirect()
 
-  const listener = webRTCDirect.createListener((socket) => {
+const listener = webRTCDirect.createListener({
+  handler: (connection) => {
     console.log('new connection opened')
-    pipe(
-            ['hello'],
-            socket
-    )
-  })
 
-  await listener.listen(addr)
-  console.log('listening')
+    connection.newStream([ECHO_PROTOCOL])
+      .then(({ stream }) => {
+        void pipe(stream, stream)
+      })
+  },
+  upgrader
+})
 
-  const conn = await webRTCDirect.dial(addr)
-  const values = await pipe(
-          conn,
-          collect
-  )
-  console.log(`Value: ${values.toString()}`)
+await listener.listen(addr)
+console.log('listening')
 
-  // Close connection after reading
-  await listener.close()
-})()
+const connection = await webRTCDirect.dial(addr, {
+  upgrader
+})
+const { stream } = await connection.newStream([ECHO_PROTOCOL])
+const values = await pipe(
+  [uint8arrayFromString('hello')],
+  stream,
+  (source) => all(source)
+)
+console.log(`Value: ${uint8ArrayToString(values[0])}`)
+
+// Close connection after reading
+await listener.close()
 ```
 
 Outputs:
@@ -103,4 +102,4 @@ The libp2p implementation in JavaScript is a work in progress. As such, there ar
 
 ## License
 
-[MIT](LICENSE) © Protocol Labs
+[MIT](LICENCE-MIT) & [Apache](LICENCE-APACHE) - Protocol Labs 2019

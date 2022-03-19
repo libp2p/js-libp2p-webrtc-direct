@@ -1,91 +1,81 @@
 import { logger } from '@libp2p/logger'
-import errcode from 'err-code'
-// @ts-expect-error no types
-import wrtc from 'wrtc'
-// @ts-expect-error no types
-import SimplePeer from 'libp2p-webrtc-peer'
-// @ts-expect-error no types
-import isNode from 'detect-node'
-import mafmt from 'mafmt'
+import * as mafmt from '@multiformats/mafmt'
 import { base58btc } from 'multiformats/bases/base58'
 import { fetch } from 'native-fetch'
 import { AbortError } from 'abortable-iterator'
 import { toString } from 'uint8arrays/to-string'
 import { fromString } from 'uint8arrays/from-string'
-import { CODE_CIRCUIT, CODE_P2P } from './constants'
-import { toMultiaddrConnection } from './socket-to-conn'
-import { createListener } from './listener'
-
-import type { AbortOptions } from '@libp2p/interfaces'
-import type { Listener, ListenerOptions, Transport, Upgrader } from '@libp2p/interfaces/transport'
+import { CODE_CIRCUIT, CODE_P2P } from './constants.js'
+import { toMultiaddrConnection } from './socket-to-conn.js'
+import { createListener } from './listener.js'
+import { Signal, WebRTCInitiator, WebRTCInitiatorInit, WebRTCReceiverInit, WRTC } from '@libp2p/webrtc-peer'
+import { symbol } from '@libp2p/interfaces/transport'
+import type { CreateListenerOptions, DialOptions, Listener, Transport } from '@libp2p/interfaces/transport'
 import type { Multiaddr } from '@multiformats/multiaddr'
 
-const log = logger('libp2p:webrtcdirect')
+const log = logger('libp2p:webrtc-direct')
 
-interface SimplePeerOptions {
-  channelConfig?: Object,
-  channelName?: string,
-  config?: Object,
-  offerOptions?: Object,
-  answerOptions?: Object,
-  sdpTransform?: <T>(sdp: T) => T,
-  stream?: boolean,
-  streams?: any[],
-  objectMode?: boolean
+export interface WebRTCDirectInit {
+  wrtc?: WRTC
+  initiatorOptions?: WebRTCInitiatorInit
+  recieverOptions?: WebRTCReceiverInit
 }
 
-export interface WebRTCDirectListenerOptions extends ListenerOptions{
-  peerOptions?: SimplePeerOptions
-}
+export class WebRTCDirect implements Transport {
+  private readonly initiatorOptions?: WebRTCInitiatorInit
+  private readonly recieverOptions?: WebRTCReceiverInit
+  public wrtc?: WRTC
 
-export interface WebRTCDirectDialOptions extends AbortOptions{
-  peerOptions?: SimplePeerOptions
-}
-
-export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
-  private readonly _upgrader: Upgrader
-
-  constructor (options: {upgrader: Upgrader}) {
-    const { upgrader } = options
-
-    if (upgrader == null) {
-      throw new Error('An upgrader must be provided. See https://github.com/libp2p/interface-transport#upgrader.')
-    }
-
-    this._upgrader = upgrader
+  constructor (init?: WebRTCDirectInit) {
+    this.initiatorOptions = init?.initiatorOptions
+    this.recieverOptions = init?.recieverOptions
+    this.wrtc = init?.wrtc
   }
 
-  async dial (ma: Multiaddr, options: WebRTCDirectDialOptions = {}) {
+  get [symbol] (): true {
+    return true
+  }
+
+  get [Symbol.toStringTag] () {
+    return '@libp2p/webrtc-direct'
+  }
+
+  async dial (ma: Multiaddr, options: DialOptions) {
     const socket = await this._connect(ma, options)
-    const maConn = toMultiaddrConnection(socket, {remoteAddr: ma, signal: options.signal})
+    const maConn = toMultiaddrConnection(socket, { remoteAddr: ma, signal: options.signal })
     log('new outbound connection %s', maConn.remoteAddr)
-    const conn = await this._upgrader.upgradeOutbound(maConn)
+    const conn = await options.upgrader.upgradeOutbound(maConn)
     log('outbound connection %s upgraded', maConn.remoteAddr)
     return conn
   }
 
-  async _connect (ma: Multiaddr, options:WebRTCDirectDialOptions = {}) {
-    if (options.signal && options.signal.aborted) {
+  async _connect (ma: Multiaddr, options: DialOptions) {
+    if (options.signal?.aborted === true) {
       throw new AbortError()
     }
 
-    const peerOptions = {
+    const channelOptions = {
       initiator: true,
       trickle: false,
-      wrtc: isNode ? wrtc : undefined,
-      ...options?.peerOptions
+      ...this.initiatorOptions
     }
 
-    return new Promise((resolve, reject) => {
-      const start = Date.now()
+    // Use custom WebRTC implementation
+    if (this.wrtc != null) {
+      channelOptions.wrtc = this.wrtc
+    }
+
+    return await new Promise<WebRTCInitiator>((resolve, reject) => {
       let connected: boolean
 
       const cOpts = ma.toOptions()
       log('Dialing %s:%s', cOpts.host, cOpts.port)
 
-      const channel = new SimplePeer(peerOptions)
+      const channel = new WebRTCInitiator(channelOptions)
 
-      const onError = (err: Error) => {
+      const onError = (evt: CustomEvent<Error>) => {
+        const err = evt.detail
+
         if (!connected) {
           const msg = `connection error ${cOpts.host}:${cOpts.port}: ${err.message}`
 
@@ -95,57 +85,87 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
         }
       }
 
-      const onTimeout = () => {
-        log('connnection timeout %s:%s', cOpts.host, cOpts.port)
-        const err = errcode(new Error(`connection timeout after ${Date.now() - start}ms`), 'ERR_CONNECT_TIMEOUT')
-        // Note: this will result in onError() being called
-        channel.emit('error', err)
-      }
-
-      const onConnect = () => {
+      const onReady = () => {
         connected = true
 
         log('connection opened %s:%s', cOpts.host, cOpts.port)
-        done(null)
+        done()
       }
 
       const onAbort = () => {
         log.error('connection aborted %s:%s', cOpts.host, cOpts.port)
-        channel.destroy()
-        done(new AbortError())
+        void channel.close().finally(() => {
+          done(new AbortError())
+        })
       }
 
-      const done = (err: Error | null) => {
-        channel.removeListener('error', onError)
-        channel.removeListener('timeout', onTimeout)
-        channel.removeListener('connect', onConnect)
-        channel.removeAllListeners('signal')
-        options.signal && options.signal.removeEventListener('abort', onAbort)
+      const done = (err?: Error) => {
+        channel.removeEventListener('error', onError)
+        channel.removeEventListener('ready', onReady)
+        options.signal?.removeEventListener('abort', onAbort)
 
-        err ? reject(err) : resolve(channel)
+        if (err != null) {
+          reject(err)
+        } else {
+          resolve(channel)
+        }
       }
 
-      channel.once('error', onError)
-      channel.once('timeout', onTimeout)
-      channel.once('connect', onConnect)
-      channel.on('close', () => channel.destroy())
-      options.signal && options.signal.addEventListener('abort', onAbort)
+      channel.addEventListener('error', onError, {
+        once: true
+      })
+      channel.addEventListener('ready', onReady, {
+        once: true
+      })
+      channel.addEventListener('close', () => {
+        channel.removeEventListener('error', onError)
+      })
+      options.signal?.addEventListener('abort', onAbort)
 
-      channel.on('signal', async (signal) => {
+      const onSignal = async (signal: Signal) => {
+        if (signal.type !== 'offer') {
+          // skip candidates, just send the offer as it includes the candidates
+          return
+        }
+
         const signalStr = JSON.stringify(signal)
-        const url = 'http://' + cOpts.host + ':' + cOpts.port
-        const path = '/?signal=' + base58btc.encode(fromString(signalStr))
+
+        let host = cOpts.host
+
+        if (cOpts.family === 6 && !host.startsWith('[')) {
+          host = `[${host}]`
+        }
+
+        const url = `http://${host}:${cOpts.port}`
+        const path = `/?signal=${base58btc.encode(fromString(signalStr))}`
         const uri = url + path
 
         try {
           const res = await fetch(uri)
-          const incSignalBuf = base58btc.decode(await res.text())
+          const body = await res.text()
+
+          if (body.trim() === '') {
+            // no response to this signal
+            return
+          }
+
+          const incSignalBuf = base58btc.decode(body)
           const incSignalStr = toString(incSignalBuf)
           const incSignal = JSON.parse(incSignalStr)
-          channel.signal(incSignal)
-        } catch (err) {
+
+          channel.handleSignal(incSignal)
+        } catch (err: any) {
+          await channel.close(err)
           reject(err)
         }
+      }
+
+      channel.addEventListener('signal', (evt) => {
+        const signal = evt.detail
+
+        void onSignal(signal).catch(async err => {
+          await channel.close(err)
+        })
       })
     })
   }
@@ -155,12 +175,12 @@ export class WebRTCDirect implements Transport<AbortOptions, ListenerOptions> {
    * anytime a new incoming Connection has been successfully upgraded via
    * `upgrader.upgradeInbound`.
    */
-  createListener (options?: WebRTCDirectListenerOptions): Listener {
-    if (!isNode) {
-      throw errcode(new Error('Can\'t listen if run from the Browser'), 'ERR_NO_SUPPORT_FROM_BROWSER')
-    }
-
-    return createListener(this._upgrader, options)
+  createListener (options: CreateListenerOptions): Listener {
+    return createListener({
+      ...options,
+      receiverOptions: this.recieverOptions,
+      wrtc: this.wrtc
+    })
   }
 
   /**
