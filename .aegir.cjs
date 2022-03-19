@@ -41,6 +41,7 @@ async function before () {
             .then(({ stream }) => {
               void pipe(stream, stream)
             })
+            .catch()
         },
         upgrader
       })
