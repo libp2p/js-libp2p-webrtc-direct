@@ -22,7 +22,6 @@
     "node": ">=16.0.0",
     "npm": ">=7.0.0"
   },
-  "main": "src/index.js",
   "type": "module",
   "types": "types/src/index.d.ts",
   "typesVersions": {
