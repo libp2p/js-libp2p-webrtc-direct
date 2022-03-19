@@ -108,6 +108,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
             .then(({ stream }) => {
               void pipe(stream, stream)
             })
+            .catch()
         }
       })
 
@@ -159,6 +160,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
             .then(({ stream }) => {
               void pipe(stream, stream)
             })
+            .catch()
         },
         upgrader
       })
