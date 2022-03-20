@@ -13,7 +13,6 @@ async function before () {
   const { pipe } = await import('it-pipe')
   const { Multiaddr } = await import('@multiformats/multiaddr')
   const { mockUpgrader, mockRegistrar } = await import('@libp2p/interface-compliance-tests/mocks')
-  const { pEvent } = await import('p-event')
 
   const REMOTE_MULTIADDR_IP4 = new Multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
   const REMOTE_MULTIADDR_IP6 = new Multiaddr('/ip6/::1/tcp/12346/http/p2p-webrtc-direct')
@@ -23,7 +22,7 @@ async function before () {
     void pipe(
       stream,
       stream
-    )
+    ).catch()
   })
   const upgrader = mockUpgrader({
     registrar
@@ -36,18 +35,9 @@ async function before () {
   const listeners = await Promise.all(
     [REMOTE_MULTIADDR_IP4, REMOTE_MULTIADDR_IP6].map(async ma => {
       const listener = wd.createListener({
-        handler: (conn) => {
-          conn.newStream([ECHO_PROTOCOL])
-            .then(({ stream }) => {
-              void pipe(stream, stream).catch()
-            })
-            .catch()
-        },
         upgrader
       })
-      listener.listen(ma)
-
-      await pEvent(listener, 'listening')
+      await listener.listen(ma)
 
       return listener
     })

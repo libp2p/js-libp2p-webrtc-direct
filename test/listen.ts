@@ -60,16 +60,31 @@ export default (create: () => Promise<WebRTCDirect>) => {
       })
     })
 
-    it.skip('listen in 0.0.0.0', (done) => {
-      // TODO
+    it('listen in 0.0.0.0', async () => {
+      const listener = wd.createListener({
+        upgrader: mockUpgrader()
+      })
+
+      await listener.listen(new Multiaddr('/ip4/0.0.0.0/tcp/48322'))
+      await listener.close()
     })
 
-    it.skip('listen in port 0', (done) => {
-      // TODO
+    it('listen in port 0', async () => {
+      const listener = wd.createListener({
+        upgrader: mockUpgrader()
+      })
+
+      await listener.listen(new Multiaddr('/ip4/127.0.0.1/tcp/0'))
+      await listener.close()
     })
 
-    it.skip('listen on IPv6 addr', (done) => {
-      // TODO IPv6 not supported yet
+    it('listen on IPv6 addr', async () => {
+      const listener = wd.createListener({
+        upgrader: mockUpgrader()
+      })
+
+      await listener.listen(new Multiaddr('/ip6/::1/tcp/48322'))
+      await listener.close()
     })
 
     it('getAddrs', async () => {

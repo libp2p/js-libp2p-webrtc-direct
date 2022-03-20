@@ -13,6 +13,8 @@ import type { Upgrader } from '@libp2p/interfaces/transport'
 const REMOTE_MULTIADDR_IP4 = new Multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
 const REMOTE_MULTIADDR_IP6 = new Multiaddr('/ip6/::1/tcp/12346/http/p2p-webrtc-direct')
 
+const ECHO_PROTOCOL = '/echo/1.0.0'
+
 export default (create: () => Promise<WebRTCDirect>) => {
   describe('dial', function () {
     this.timeout(20 * 1000)
@@ -36,7 +38,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
     it('dial on IPv4', async () => {
       const wd = await create()
       const conn = await wd.dial(REMOTE_MULTIADDR_IP4, { upgrader })
-      const { stream } = await conn.newStream(['/echo/1.0.0'])
+      const { stream } = await conn.newStream(ECHO_PROTOCOL)
       const data = fromString('some data')
 
       const values = await pipe(
@@ -56,7 +58,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
 
       const values = await Promise.all(
         [conn1, conn2].map(async conn => {
-          const { stream } = await conn1.newStream(['/echo/1.0.0'])
+          const { stream } = await conn1.newStream(ECHO_PROTOCOL)
           const data = fromString('some data ' + conn.id)
 
           const values = await pipe(
@@ -74,6 +76,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
       ], [
         fromString('some data ' + conn2.id)
       ]])
+
       await conn1.close()
       await conn2.close()
     })
