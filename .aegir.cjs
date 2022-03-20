@@ -39,7 +39,7 @@ async function before () {
         handler: (conn) => {
           conn.newStream([ECHO_PROTOCOL])
             .then(({ stream }) => {
-              void pipe(stream, stream)
+              void pipe(stream, stream).catch()
             })
             .catch()
         },

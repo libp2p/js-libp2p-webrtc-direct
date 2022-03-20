@@ -26,7 +26,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
         void pipe(
           stream,
           stream
-        ).catch()
+        )
       })
       upgrader = mockUpgrader({
         registrar
