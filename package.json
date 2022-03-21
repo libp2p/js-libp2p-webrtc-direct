@@ -37,10 +37,12 @@
     }
   },
   "files": [
-    "*",
+    "src",
+    "dist",
     "!**/*.tsbuildinfo",
     "!**/browser-test",
-    "!**/node-test"
+    "!**/node-test",
+    "!**/test"
   ],
   "exports": {
     ".": {
