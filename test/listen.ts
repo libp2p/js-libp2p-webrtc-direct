@@ -103,8 +103,6 @@ export default (create: () => Promise<WebRTCDirect>) => {
     })
 
     it('should untrack conn after being closed', async function () {
-      this.timeout(20e3)
-
       const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
       const registrar = mockRegistrar()
       void registrar.handle(ECHO_PROTOCOL, ({ stream }) => {
@@ -153,8 +151,6 @@ export default (create: () => Promise<WebRTCDirect>) => {
     })
 
     it('should have remoteAddress in listener connection', async function () {
-      this.timeout(20e3)
-
       const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
       const registrar = mockRegistrar()
       void registrar.handle(ECHO_PROTOCOL, ({ stream }) => {
