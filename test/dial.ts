@@ -17,7 +17,7 @@ const ECHO_PROTOCOL = '/echo/1.0.0'
 
 export default (create: () => Promise<WebRTCDirect>) => {
   describe('dial', function () {
-    this.timeout(20 * 1000)
+    this.timeout(540 * 1000)
 
     let upgrader: Upgrader
 
