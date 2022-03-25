@@ -6,7 +6,7 @@ import type { WebRTCDirect } from '../src/index.js'
 
 export default (create: () => Promise<WebRTCDirect>) => {
   describe('interface-transport compliance', function () {
-    this.timeout(540 * 1000)
+    this.timeout(20 * 1000)
 
     tests({
       async setup () {
