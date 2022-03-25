@@ -35,8 +35,6 @@ jobs:
           node-version: ${{ matrix.node }}
       - uses: ipfs/aegir/actions/cache-node-modules@master
       - run: npm run --if-present test:node
-        env:
-          DEBUG: libp2p*
       - uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # v2.1.0
         with:
           directory: ./.nyc_output
