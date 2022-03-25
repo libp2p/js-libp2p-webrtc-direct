@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - uses: ipfs/aegir/actions/cache-node-modules@master
+      - run: npm i
       - run: npm run --if-present test:node -- --grep 'dial on IPv4'
         env:
           DEBUG: libp2p*
