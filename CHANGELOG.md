@@ -1,3 +1,30 @@
+## [1.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.7.1...v1.0.0) (2022-03-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* this module is now ESM-only
+
+Co-authored-by: achingbrain <alex@achingbrain.net>
+
+### Features
+
+* convert to typescript ([#151](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/151)) ([85ce5cf](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/85ce5cf49afcdb788212e250673e8e4f8609055d))
+
+
+### Bug Fixes
+
+* add 'node-pre-gyp' installation to 'check' and 'test-node' actions ([#152](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/152)) ([bf4a68b](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/bf4a68b9e4a159bb6a4d73a92b11a6cfdb140178))
+
+
+### Trivial Changes
+
+* add note about `node-pre-gyp` to readme.md ([#141](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/141)) ([ab4cc82](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/ab4cc825d75801972b8c33e37ffca28796b9a1aa)), closes [#140](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/140)
+* **deps-dev:** bump aegir from 35.2.1 to 36.0.0 ([#139](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/139)) ([720cfad](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/720cfadaea310c84feb3fe9eecc005ed53e1b95f))
+* replace Travis with Github Actions ([#150](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/150)) ([a73735b](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/a73735b80bb32d4f4618e5071abfd17f90679ee1))
+* update project config ([13ab340](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/13ab340c9733c8ac0d134e4735a177722780bd27))
+* update Readme ([#148](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/148)) ([ba9facb](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/ba9facb708d5f802d0c9010fa3d1351f9a6a11f8))
+
 ## [0.7.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v0.7.0...v0.7.1) (2021-09-20)
 
 
@@ -106,6 +133,3 @@
 ### Features
 
 * v0.1.0 ([8a5d975](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/8a5d975))
-
-
-
