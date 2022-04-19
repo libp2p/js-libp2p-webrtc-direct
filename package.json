@@ -151,7 +151,7 @@
   "devDependencies": {
     "@libp2p/interface-compliance-tests": "^1.1.20",
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "aegir": "^36.0.0",
+    "aegir": "^37.0.14",
     "it-all": "^1.0.6",
     "it-pipe": "^2.0.3",
     "multiaddr": "^10.0.0",
