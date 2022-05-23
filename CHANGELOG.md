@@ -1,3 +1,15 @@
+### [1.0.2](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v1.0.1...v1.0.2) (2022-05-23)
+
+
+### Bug Fixes
+
+* update interfaces ([#168](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/168)) ([b5c4763](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/b5c47633396be382c88ae079b3a1f29efd3bf831))
+
+
+### Trivial Changes
+
+* **deps:** bump undici from 4.16.0 to 5.2.0 ([#164](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/164)) ([689122c](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/689122cce110afa706ade91a806b654ba7b294dc))
+
 ### [1.0.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v1.0.0...v1.0.1) (2022-05-04)
 
 
