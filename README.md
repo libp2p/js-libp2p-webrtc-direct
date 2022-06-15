@@ -39,7 +39,7 @@ import { pipe } from 'it-pipe'
 import all from 'it-all'
 
 const ECHO_PROTOCOL = '/echo/1.0.0'
-const addr = new Multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
+const addr = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 const webRTCDirect = new WebRTCDirect()
 
 const listener = webRTCDirect.createListener({

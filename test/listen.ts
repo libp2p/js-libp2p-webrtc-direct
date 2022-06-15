@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
 import { expect } from 'aegir/chai'
-import { Multiaddr } from '@multiformats/multiaddr'
+import { multiaddr } from '@multiformats/multiaddr'
 import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import { isBrowser } from 'wherearewe'
 import type { WebRTCDirect } from '../src/index.js'
@@ -20,7 +20,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
 
     let wd: WebRTCDirect
 
-    const ma = new Multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
+    const ma = multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
 
     before(async () => {
       wd = await create()
@@ -67,7 +67,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
         upgrader: mockUpgrader()
       })
 
-      await listener.listen(new Multiaddr('/ip4/0.0.0.0/tcp/48322'))
+      await listener.listen(multiaddr('/ip4/0.0.0.0/tcp/48322'))
       await listener.close()
     })
 
@@ -76,7 +76,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
         upgrader: mockUpgrader()
       })
 
-      await listener.listen(new Multiaddr('/ip4/127.0.0.1/tcp/0'))
+      await listener.listen(multiaddr('/ip4/127.0.0.1/tcp/0'))
       await listener.close()
     })
 
@@ -85,7 +85,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
         upgrader: mockUpgrader()
       })
 
-      await listener.listen(new Multiaddr('/ip6/::1/tcp/48322'))
+      await listener.listen(multiaddr('/ip6/::1/tcp/48322'))
       await listener.close()
     })
 
@@ -103,7 +103,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
     })
 
     it('should untrack conn after being closed', async function () {
-      const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
       const registrar = mockRegistrar()
       void registrar.handle(ECHO_PROTOCOL, ({ stream }) => {
         void pipe(
@@ -151,7 +151,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
     })
 
     it('should have remoteAddress in listener connection', async function () {
-      const ma1 = new Multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
+      const ma1 = multiaddr('/ip4/127.0.0.1/tcp/12346/http/p2p-webrtc-direct')
       const registrar = mockRegistrar()
       void registrar.handle(ECHO_PROTOCOL, ({ stream }) => {
         void pipe(
