@@ -5,9 +5,9 @@ import { Multiaddr } from '@multiformats/multiaddr'
 import { pipe } from 'it-pipe'
 import all from 'it-all'
 import { fromString } from 'uint8arrays/from-string'
-import { mockRegistrar, mockUpgrader } from '@libp2p/interface-compliance-tests/mocks'
+import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import type { WebRTCDirect } from '../src/index.js'
-import type { Upgrader } from '@libp2p/interfaces/transport'
+import type { Upgrader } from '@libp2p/interface-transport'
 
 // this node is started in aegir.cjs before the test run
 const REMOTE_MULTIADDR_IP4 = new Multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')

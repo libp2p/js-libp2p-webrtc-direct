@@ -9,8 +9,8 @@ import { CODE_CIRCUIT, CODE_P2P } from './constants.js'
 import { toMultiaddrConnection } from './socket-to-conn.js'
 import { createListener } from './listener.js'
 import { Signal, WebRTCInitiator, WebRTCInitiatorInit, WebRTCReceiverInit, WRTC } from '@libp2p/webrtc-peer'
-import { symbol } from '@libp2p/interfaces/transport'
-import type { CreateListenerOptions, DialOptions, Listener, Transport } from '@libp2p/interfaces/transport'
+import { symbol } from '@libp2p/interface-transport'
+import type { CreateListenerOptions, DialOptions, Listener, Transport } from '@libp2p/interface-transport'
 import type { Multiaddr } from '@multiformats/multiaddr'
 
 const log = logger('libp2p:webrtc-direct')

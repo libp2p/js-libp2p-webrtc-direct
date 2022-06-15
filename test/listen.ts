@@ -2,7 +2,7 @@
 
 import { expect } from 'aegir/chai'
 import { Multiaddr } from '@multiformats/multiaddr'
-import { mockRegistrar, mockUpgrader } from '@libp2p/interface-compliance-tests/mocks'
+import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import { isBrowser } from 'wherearewe'
 import type { WebRTCDirect } from '../src/index.js'
 import { pipe } from 'it-pipe'

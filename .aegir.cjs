@@ -12,7 +12,7 @@ async function before () {
   const { WebRTCDirect } = await import('./dist/src/index.js')
   const { pipe } = await import('it-pipe')
   const { Multiaddr } = await import('@multiformats/multiaddr')
-  const { mockUpgrader, mockRegistrar } = await import('@libp2p/interface-compliance-tests/mocks')
+  const { mockUpgrader, mockRegistrar } = await import('@libp2p/interface-mocks')
 
   const REMOTE_MULTIADDR_IP4 = new Multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
   const REMOTE_MULTIADDR_IP6 = new Multiaddr('/ip6/::1/tcp/12346/http/p2p-webrtc-direct')
