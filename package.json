@@ -1,6 +1,6 @@
 {
   "name": "@libp2p/webrtc-direct",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Dial using WebRTC without the need to set up any Signalling Rendezvous Point! ",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/libp2p/js-libp2p-webrtc-direct#readme",
