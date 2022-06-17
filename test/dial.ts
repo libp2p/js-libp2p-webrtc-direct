@@ -38,7 +38,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
     it('dial on IPv4', async () => {
       const wd = await create()
       const conn = await wd.dial(REMOTE_MULTIADDR_IP4, { upgrader })
-      const { stream } = await conn.newStream(ECHO_PROTOCOL)
+      const stream = await conn.newStream(ECHO_PROTOCOL)
       const data = fromString('some data')
 
       const values = await pipe(
@@ -58,7 +58,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
 
       const values = await Promise.all(
         [conn1, conn2].map(async conn => {
-          const { stream } = await conn1.newStream(ECHO_PROTOCOL)
+          const stream = await conn1.newStream(ECHO_PROTOCOL)
           const data = fromString('some data ' + conn.id)
 
           const values = await pipe(
@@ -91,7 +91,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
     it('dial on IPv6', async () => {
       const wd = await create()
       const conn = await wd.dial(REMOTE_MULTIADDR_IP6, { upgrader })
-      const { stream } = await conn.newStream(['/echo/1.0.0'])
+      const stream = await conn.newStream(['/echo/1.0.0'])
       const data = fromString('some data')
 
       const values = await pipe(
