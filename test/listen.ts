@@ -120,7 +120,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
         upgrader,
         handler: (conn) => {
           void conn.newStream([ECHO_PROTOCOL])
-            .then(({ stream }) => {
+            .then((stream) => {
               void pipe(stream, stream)
             })
         }
@@ -169,7 +169,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
           expect(conn.remoteAddr).to.exist()
 
           void conn.newStream([ECHO_PROTOCOL])
-            .then(({ stream }) => {
+            .then((stream) => {
               void pipe(stream, stream)
             })
         },
