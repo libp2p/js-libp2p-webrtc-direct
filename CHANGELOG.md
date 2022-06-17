@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.0...v2.0.1) (2022-06-17)
+
+
+### Trivial Changes
+
+* update deps ([#176](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/176)) ([5b19a56](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/5b19a56c61865dec611ea4accaa6a9254987ba49))
+
 ## [2.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v1.0.2...v2.0.0) (2022-06-15)
 
 
