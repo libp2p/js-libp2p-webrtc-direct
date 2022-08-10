@@ -135,10 +135,10 @@
     "release": "aegir release"
   },
   "dependencies": {
-    "@libp2p/interface-transport": "^1.0.0",
-    "@libp2p/interfaces": "^3.0.2",
+    "@libp2p/interface-transport": "^1.0.3",
+    "@libp2p/interfaces": "^3.0.3",
     "@libp2p/logger": "^2.0.0",
-    "@libp2p/utils": "^2.0.0",
+    "@libp2p/utils": "^3.0.1",
     "@libp2p/webrtc-peer": "^2.0.0",
     "@multiformats/mafmt": "^11.0.2",
     "@multiformats/multiaddr": "^10.1.7",
@@ -152,13 +152,15 @@
     "wherearewe": "^1.0.1"
   },
   "devDependencies": {
-    "@libp2p/interface-mocks": "^2.0.1",
-    "@libp2p/interface-transport-compliance-tests": "^2.0.0",
+    "@libp2p/interface-mocks": "^4.0.1",
+    "@libp2p/interface-transport-compliance-tests": "^2.0.5",
     "@mapbox/node-pre-gyp": "^1.0.8",
     "aegir": "^37.2.0",
     "it-all": "^1.0.6",
     "it-pipe": "^2.0.3",
+    "it-stream-types": "^1.0.4",
     "multiaddr": "^10.0.0",
+    "uint8arraylist": "^2.3.2",
     "wrtc": "^0.4.6"
   },
   "browser": {

@@ -8,12 +8,19 @@ import { fromString } from 'uint8arrays/from-string'
 import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import type { WebRTCDirect } from '../src/index.js'
 import type { Upgrader } from '@libp2p/interface-transport'
+import type { Uint8ArrayList } from 'uint8arraylist'
+import type { Source } from 'it-stream-types'
 
 // this node is started in aegir.cjs before the test run
 const REMOTE_MULTIADDR_IP4 = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
 const REMOTE_MULTIADDR_IP6 = multiaddr('/ip6/::1/tcp/12346/http/p2p-webrtc-direct')
-
 const ECHO_PROTOCOL = '/echo/1.0.0'
+
+async function * toBytes (source: Source<Uint8ArrayList>) {
+  for await (const list of source) {
+    yield * list
+  }
+}
 
 export default (create: () => Promise<WebRTCDirect>) => {
   describe('dial', function () {
@@ -44,6 +51,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
       const values = await pipe(
         [data],
         stream,
+        toBytes,
         async (source) => await all(source)
       )
 
@@ -64,6 +72,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
           const values = await pipe(
             [data],
             stream,
+            toBytes,
             async (source) => await all(source)
           )
 
@@ -97,6 +106,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
       const values = await pipe(
         [data],
         stream,
+        toBytes,
         async (source) => await all(source)
       )
 
