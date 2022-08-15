@@ -149,7 +149,7 @@
     "p-event": "^5.0.1",
     "uint8arrays": "^3.0.0",
     "undici": "^5.2.0",
-    "wherearewe": "^1.0.1"
+    "wherearewe": "^2.0.1"
   },
   "devDependencies": {
     "@libp2p/interface-mocks": "^4.0.1",
