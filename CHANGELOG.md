@@ -1,3 +1,15 @@
+## [2.0.3](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.2...v2.0.3) (2022-09-21)
+
+
+### Trivial Changes
+
+* Update .github/workflows/stale.yml [skip ci] ([217d1df](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/217d1df6a662c8d669db23f193c5db42144aeec2))
+
+
+### Dependencies
+
+* update @multiformats/multiaddr to 11.0.0 ([#188](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/188)) ([d56fa4b](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/d56fa4b9bc2d0ba132d7878c4f286e6ec1b5d3d0))
+
 ## [2.0.2](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.1...v2.0.2) (2022-08-10)
 
 
