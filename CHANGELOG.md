@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.3...v3.0.0) (2022-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* bump @libp2p/interface-transport from 1.0.4 to 2.0.0 (#190)
+
+### Dependencies
+
+* bump @libp2p/interface-transport from 1.0.4 to 2.0.0 ([#190](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/190)) ([a2cb1e4](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/a2cb1e479a250e5ef063bad98bda86ac75e42db8))
+
 ## [2.0.3](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.2...v2.0.3) (2022-09-21)
 
 
