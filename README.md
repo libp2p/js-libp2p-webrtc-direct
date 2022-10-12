@@ -33,43 +33,17 @@ $ npm i @libp2p/webrtc-direct
 ## Usage
 
 ```js
-import { WebRTCDirect } from '@libp2p/webrtc-direct'
-import { multiaddr } from '@multiformats/multiaddr'
-import { pipe } from 'it-pipe'
-import all from 'it-all'
+import { createLibp2pNode } from 'libp2p'
+import { webRTCDirect } from '@libp2p/webrtc-direct'
 
-const ECHO_PROTOCOL = '/echo/1.0.0'
-const addr = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
-const webRTCDirect = new WebRTCDirect()
-
-const listener = webRTCDirect.createListener({
-  handler: (connection) => {
-    console.log('new connection opened')
-
-    connection.newStream([ECHO_PROTOCOL])
-      .then(({ stream }) => {
-        void pipe(stream, stream)
-      })
-  },
-  upgrader
+const node = await createLibp2p({
+  transports: [
+    webRTCDirect()
+  ]
+  //... other config
 })
-
-await listener.listen(addr)
-console.log('listening')
-
-const connection = await webRTCDirect.dial(addr, {
-  upgrader
-})
-const { stream } = await connection.newStream([ECHO_PROTOCOL])
-const values = await pipe(
-  [uint8arrayFromString('hello')],
-  stream,
-  (source) => all(source)
-)
-console.log(`Value: ${uint8ArrayToString(values[0])}`)
-
-// Close connection after reading
-await listener.close()
+await node.start()
+await node.dial('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 ```
 
 Outputs:
