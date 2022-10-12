@@ -9,7 +9,7 @@ process.on('beforeExit', (code) => process.exit(code))
 const ECHO_PROTOCOL = '/echo/1.0.0'
 
 async function before () {
-  const { WebRTCDirect } = await import('./dist/src/index.js')
+  const { webRTCDirect } = await import('./dist/src/index.js')
   const { pipe } = await import('it-pipe')
   const { multiaddr } = await import('@multiformats/multiaddr')
   const { mockUpgrader, mockRegistrar } = await import('@libp2p/interface-mocks')
@@ -28,9 +28,9 @@ async function before () {
     registrar
   })
 
-  const wd = new WebRTCDirect({
+  const wd = webRTCDirect({
     wrtc
-  })
+  })()
 
   const listeners = await Promise.all(
     [REMOTE_MULTIADDR_IP4, REMOTE_MULTIADDR_IP6].map(async ma => {

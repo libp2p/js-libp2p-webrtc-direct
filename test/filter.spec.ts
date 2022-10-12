@@ -2,11 +2,11 @@
 
 import { expect } from 'aegir/chai'
 import { multiaddr } from '@multiformats/multiaddr'
-import { WebRTCDirect } from '../src/index.js'
+import { webRTCDirect } from '../src/index.js'
 
 describe('filter', () => {
   it('filters non valid webrtc-direct multiaddrs', () => {
-    const wd = new WebRTCDirect()
+    const wd = webRTCDirect()()
     const maArr = [
       multiaddr('/ip4/1.2.3.4/tcp/3456/http/p2p-webrtc-direct'),
       multiaddr('/ip4/127.0.0.1/tcp/9090/ws'),
@@ -21,7 +21,7 @@ describe('filter', () => {
   })
 
   it('filter a single addr for this transport', () => {
-    const wd = new WebRTCDirect()
+    const wd = webRTCDirect()()
     const ma = multiaddr('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 
     const filtered = wd.filter([ma])

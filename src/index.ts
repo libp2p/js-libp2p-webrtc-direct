@@ -21,7 +21,7 @@ export interface WebRTCDirectInit {
   recieverOptions?: WebRTCReceiverInit
 }
 
-export class WebRTCDirect implements Transport {
+class WebRTCDirect implements Transport {
   private readonly initiatorOptions?: WebRTCInitiatorInit
   private readonly recieverOptions?: WebRTCReceiverInit
   public wrtc?: WRTC
@@ -197,4 +197,8 @@ export class WebRTCDirect implements Transport {
       return mafmt.WebRTCDirect.matches(ma.decapsulateCode(CODE_P2P))
     })
   }
+}
+
+export function webRTCDirect (init: WebRTCDirectInit = {}): () => Transport {
+  return () => new WebRTCDirect(init)
 }
