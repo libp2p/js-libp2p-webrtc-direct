@@ -148,7 +148,7 @@
     "@multiformats/multiaddr": "^11.0.0",
     "abortable-iterator": "^4.0.2",
     "err-code": "^3.0.0",
-    "multiformats": "^9.4.5",
+    "multiformats": "^10.0.0",
     "native-fetch": "^4.0.2",
     "p-event": "^5.0.1",
     "uint8arrays": "^3.0.0",
