@@ -46,16 +46,6 @@ await node.start()
 await node.dial('/ip4/127.0.0.1/tcp/9090/http/p2p-webrtc-direct')
 ```
 
-Outputs:
-
-```sh
-listening
-new connection opened
-Value: hello
-```
-
-Note that it may take some time for the connection to be established.
-
 ## API
 
 ### Transport
