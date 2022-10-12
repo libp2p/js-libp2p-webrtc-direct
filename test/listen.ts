@@ -4,13 +4,13 @@ import { expect } from 'aegir/chai'
 import { multiaddr } from '@multiformats/multiaddr'
 import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import { isBrowser } from 'wherearewe'
-import type { WebRTCDirect } from '../src/index.js'
 import { pipe } from 'it-pipe'
 import { pEvent } from 'p-event'
+import type { Transport } from '@libp2p/interface-transport'
 
 const ECHO_PROTOCOL = '/echo/1.0.0'
 
-export default (create: () => Promise<WebRTCDirect>) => {
+export default (create: () => Promise<Transport>) => {
   describe('listen', function () {
     this.timeout(20 * 1000)
 
@@ -18,7 +18,7 @@ export default (create: () => Promise<WebRTCDirect>) => {
       return
     }
 
-    let wd: WebRTCDirect
+    let wd: Transport
 
     const ma = multiaddr('/ip4/127.0.0.1/tcp/20123/http/p2p-webrtc-direct')
 

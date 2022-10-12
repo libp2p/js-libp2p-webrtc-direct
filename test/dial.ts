@@ -6,8 +6,7 @@ import { pipe } from 'it-pipe'
 import all from 'it-all'
 import { fromString } from 'uint8arrays/from-string'
 import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
-import type { WebRTCDirect } from '../src/index.js'
-import type { Upgrader } from '@libp2p/interface-transport'
+import type { Transport, Upgrader } from '@libp2p/interface-transport'
 import type { Uint8ArrayList } from 'uint8arraylist'
 import type { Source } from 'it-stream-types'
 
@@ -22,7 +21,7 @@ async function * toBytes (source: Source<Uint8ArrayList>) {
   }
 }
 
-export default (create: () => Promise<WebRTCDirect>) => {
+export default (create: () => Promise<Transport>) => {
   describe('dial', function () {
     this.timeout(20 * 1000)
 

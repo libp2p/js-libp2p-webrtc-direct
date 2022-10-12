@@ -1,10 +1,10 @@
 /* eslint-env mocha */
 
+import type { Transport } from '@libp2p/interface-transport'
 import tests from '@libp2p/interface-transport-compliance-tests'
 import { multiaddr } from '@multiformats/multiaddr'
-import type { WebRTCDirect } from '../src/index.js'
 
-export default (create: () => Promise<WebRTCDirect>) => {
+export default (create: () => Promise<Transport>) => {
   describe('interface-transport compliance', function () {
     this.timeout(20 * 1000)
 
