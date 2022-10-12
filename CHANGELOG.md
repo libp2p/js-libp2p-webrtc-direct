@@ -1,3 +1,19 @@
+## [4.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v3.0.0...v4.0.0) (2022-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* modules no longer implement `Initializable` instead switching to constructor injection
+
+### Bug Fixes
+
+* remove @libp2p/components ([#194](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/194)) ([fc53a59](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/fc53a59e52c7d4111944008c08e183546706b823))
+
+
+### Dependencies
+
+* **dev:** bump @libp2p/interface-mocks from 4.0.3 to 6.0.1 ([#192](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/192)) ([5cf8ccc](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/5cf8ccc73782f40da643d0a646f33561a1e7cc83))
+
 ## [3.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v2.0.3...v3.0.0) (2022-10-07)
 
 
