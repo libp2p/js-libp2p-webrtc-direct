@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.0...v4.0.1) (2022-10-17)
+
+
+### Dependencies
+
+* **dev:** bump it-all from 1.0.6 to 2.0.0 ([#195](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/195)) ([c81c9b6](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/c81c9b69a4c21d06d8ed135f4dc508ad48d23c3a))
+
 ## [4.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v3.0.0...v4.0.0) (2022-10-12)
 
 
