@@ -160,7 +160,7 @@
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@mapbox/node-pre-gyp": "^1.0.8",
     "aegir": "^37.5.3",
-    "it-all": "^1.0.6",
+    "it-all": "^2.0.0",
     "it-pipe": "^2.0.3",
     "it-stream-types": "^1.0.4",
     "multiaddr": "^10.0.0",
