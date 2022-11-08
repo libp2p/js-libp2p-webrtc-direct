@@ -156,7 +156,7 @@
     "wherearewe": "^2.0.1"
   },
   "devDependencies": {
-    "@libp2p/interface-mocks": "^7.0.1",
+    "@libp2p/interface-mocks": "^8.0.1",
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@mapbox/node-pre-gyp": "^1.0.8",
     "aegir": "^37.5.3",
