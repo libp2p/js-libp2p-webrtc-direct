@@ -33,7 +33,7 @@ $ npm i @libp2p/webrtc-direct
 ## Usage
 
 ```js
-import { createLibp2pNode } from 'libp2p'
+import { createLibp2p } from 'libp2p'
 import { webRTCDirect } from '@libp2p/webrtc-direct'
 
 const node = await createLibp2p({
