@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.1...v4.0.2) (2022-11-15)
+
+
+### Documentation
+
+* fixed wrong import name ([#197](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/197)) ([281fee0](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/281fee0c99710f2be718d652a0fa0f7c772dba58))
+
 ## [4.0.1](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.0...v4.0.1) (2022-10-17)
 
 
