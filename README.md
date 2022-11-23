@@ -30,14 +30,14 @@ https://github.com/libp2p/js-libp2p/issues/1462
 
 ## Table of contents <!-- omit in toc -->
 
-  - [Install](#install)
-  - [Usage](#usage)
-  - [API](#api)
-    - [Transport](#transport)
-    - [Connection](#connection)
-  - [Contribute](#contribute)
-  - [License](#license)
-  - [Contribute](#contribute-1)
+- [Install](#install)
+- [Usage](#usage)
+- [API](#api)
+  - [Transport](#transport)
+  - [Connection](#connection)
+- [Contribute](#contribute)
+- [License](#license)
+- [Contribute](#contribute-1)
 
 ## Install
 
