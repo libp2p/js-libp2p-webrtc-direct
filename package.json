@@ -148,7 +148,7 @@
     "@multiformats/multiaddr": "^11.0.0",
     "abortable-iterator": "^4.0.2",
     "err-code": "^3.0.0",
-    "multiformats": "^10.0.0",
+    "multiformats": "^11.0.0",
     "native-fetch": "^4.0.2",
     "p-event": "^5.0.1",
     "uint8arrays": "^4.0.2",
@@ -156,10 +156,10 @@
     "wherearewe": "^2.0.1"
   },
   "devDependencies": {
-    "@libp2p/interface-mocks": "^7.0.1",
+    "@libp2p/interface-mocks": "^9.0.0",
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "aegir": "^37.5.3",
+    "aegir": "^37.9.1",
     "it-all": "^2.0.0",
     "it-pipe": "^2.0.3",
     "it-stream-types": "^1.0.4",
