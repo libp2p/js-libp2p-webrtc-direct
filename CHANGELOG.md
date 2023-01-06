@@ -1,3 +1,19 @@
+## [5.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.2...v5.0.0) (2023-01-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* update multiformats to v11 (#202)
+
+### Bug Fixes
+
+* update multiformats to v11 ([#202](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/202)) ([4f69ed4](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/4f69ed44509046992428068833d732ae0e3dc441))
+
+
+### Trivial Changes
+
+* add archive note to README ([#199](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/199)) ([2d9fb2e](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/2d9fb2eae5fc6c6b33558d43549e1114e4789ee8))
+
 ## [4.0.2](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.1...v4.0.2) (2022-11-15)
 
 
