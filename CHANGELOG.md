@@ -1,3 +1,14 @@
+## [6.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v5.0.0...v6.0.0) (2023-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* update all deps (#211)
+
+### Dependencies
+
+* update all deps ([#211](https://github.com/libp2p/js-libp2p-webrtc-direct/issues/211)) ([7718a34](https://github.com/libp2p/js-libp2p-webrtc-direct/commit/7718a34d87abefce2bb63e6040e09b6cd467e63f))
+
 ## [5.0.0](https://github.com/libp2p/js-libp2p-webrtc-direct/compare/v4.0.2...v5.0.0) (2023-01-06)
 
 
