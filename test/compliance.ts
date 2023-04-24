@@ -4,8 +4,8 @@ import type { Transport } from '@libp2p/interface-transport'
 import tests from '@libp2p/interface-transport-compliance-tests'
 import { multiaddr } from '@multiformats/multiaddr'
 
-export default (create: () => Promise<Transport>) => {
-  describe('interface-transport compliance', function () {
+export default (create: () => Promise<Transport>): void => {
+  describe('interface-transport compliance', function (): void {
     this.timeout(20 * 1000)
 
     tests({
