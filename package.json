@@ -159,7 +159,7 @@
     "@libp2p/interface-mocks": "^9.0.0",
     "@libp2p/interface-transport-compliance-tests": "^3.0.0",
     "@mapbox/node-pre-gyp": "^1.0.8",
-    "aegir": "^37.9.1",
+    "aegir": "^38.1.8",
     "it-all": "^2.0.0",
     "it-pipe": "^2.0.3",
     "it-stream-types": "^1.0.4",
