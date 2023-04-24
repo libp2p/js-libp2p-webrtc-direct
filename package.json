@@ -139,7 +139,7 @@
     "release": "aegir release"
   },
   "dependencies": {
-    "@libp2p/interface-transport": "^2.0.0",
+    "@libp2p/interface-transport": "^4.0.0",
     "@libp2p/interfaces": "^3.0.3",
     "@libp2p/logger": "^2.0.1",
     "@libp2p/utils": "^3.0.2",
