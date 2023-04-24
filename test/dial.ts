@@ -9,19 +9,20 @@ import { mockRegistrar, mockUpgrader } from '@libp2p/interface-mocks'
 import type { Transport, Upgrader } from '@libp2p/interface-transport'
 import type { Uint8ArrayList } from 'uint8arraylist'
 import type { Source } from 'it-stream-types'
+import { EventEmitter } from '@libp2p/interfaces/events'
 
 // this node is started in aegir.cjs before the test run
 const REMOTE_MULTIADDR_IP4 = multiaddr('/ip4/127.0.0.1/tcp/12345/http/p2p-webrtc-direct')
 const REMOTE_MULTIADDR_IP6 = multiaddr('/ip6/::1/tcp/12346/http/p2p-webrtc-direct')
 const ECHO_PROTOCOL = '/echo/1.0.0'
 
-async function * toBytes (source: Source<Uint8ArrayList>) {
+async function * toBytes (source: Source<Uint8ArrayList>): AsyncGenerator<Uint8Array, void, undefined> {
   for await (const list of source) {
     yield * list
   }
 }
 
-export default (create: () => Promise<Transport>) => {
+export default (create: () => Promise<Transport>): void => {
   describe('dial', function () {
     this.timeout(20 * 1000)
 
@@ -37,7 +38,8 @@ export default (create: () => Promise<Transport>) => {
         )
       })
       upgrader = mockUpgrader({
-        registrar
+        registrar,
+        events: new EventEmitter()
       })
     })
 

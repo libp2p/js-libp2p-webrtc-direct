@@ -67,7 +67,7 @@ class WebRTCDirectServer extends EventEmitter<WebRTCDirectServerEvents> {
     this.server.listen(lOpts)
   }
 
-  async processRequest (req: IncomingMessage, res: ServerResponse) {
+  async processRequest (req: IncomingMessage, res: ServerResponse): Promise<void> {
     const remoteAddress = req?.socket?.remoteAddress
     const remotePort = req?.socket.remotePort
     const remoteHost = req.headers.host
@@ -133,7 +133,7 @@ class WebRTCDirectServer extends EventEmitter<WebRTCDirectServerEvents> {
 
       this.connections.push(maConn)
 
-      const untrackConn = () => {
+      const untrackConn = (): void => {
         this.connections = this.connections.filter(c => c !== maConn)
         this.channels = this.channels.filter(c => c !== channel)
       }
@@ -148,15 +148,15 @@ class WebRTCDirectServer extends EventEmitter<WebRTCDirectServerEvents> {
     channel.handleSignal(incSignal)
   }
 
-  async close () {
+  async close (): Promise<void> {
     await Promise.all(
-      this.channels.map(async channel => await channel.close())
+      this.channels.map(async channel => { await channel.close() })
     )
 
     await new Promise<void>((resolve, reject) => {
       this.server.close((err) => {
         if (err != null) {
-          return reject(err)
+          reject(err); return
         }
 
         resolve()
@@ -182,7 +182,7 @@ class WebRTCDirectListener extends EventEmitter<ListenerEvents> implements Liste
     this.handler = handler
   }
 
-  async listen (multiaddr: Multiaddr) {
+  async listen (multiaddr: Multiaddr): Promise<void> {
     // Should only be used if not already listening
     if (this.multiaddr != null) {
       throw errCode(new Error('listener already in use'), 'ERR_ALREADY_LISTENING')
@@ -203,14 +203,14 @@ class WebRTCDirectListener extends EventEmitter<ListenerEvents> implements Liste
     this.dispatchEvent(new CustomEvent('listening'))
   }
 
-  async onConnection (maConn: MultiaddrConnection) {
+  async onConnection (maConn: MultiaddrConnection): Promise<void> {
     let connection: Connection
 
     try {
       connection = await this.upgrader.upgradeInbound(maConn)
     } catch (err) {
       log.error('inbound connection failed to upgrade', err)
-      return await maConn.close()
+      await maConn.close(); return
     }
     log('inbound connection %s upgraded', maConn.remoteAddr)
 
@@ -221,7 +221,7 @@ class WebRTCDirectListener extends EventEmitter<ListenerEvents> implements Liste
     this.dispatchEvent(new CustomEvent<Connection>('connection', { detail: connection }))
   }
 
-  async close () {
+  async close (): Promise<void> {
     if (this.server != null) {
       await this.server.close()
     }
@@ -229,7 +229,7 @@ class WebRTCDirectListener extends EventEmitter<ListenerEvents> implements Liste
     this.dispatchEvent(new CustomEvent('close'))
   }
 
-  getAddrs () {
+  getAddrs (): Multiaddr[] {
     if (this.multiaddr != null) {
       return [this.multiaddr]
     }
@@ -238,6 +238,6 @@ class WebRTCDirectListener extends EventEmitter<ListenerEvents> implements Liste
   }
 }
 
-export function createListener (options: WebRTCDirectListenerOptions) {
+export function createListener (options: WebRTCDirectListenerOptions): Listener {
   return new WebRTCDirectListener(options.upgrader, options.wrtc, options.receiverOptions, options.handler)
 }

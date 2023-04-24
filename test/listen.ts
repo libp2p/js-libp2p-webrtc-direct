@@ -7,10 +7,11 @@ import { isBrowser } from 'wherearewe'
 import { pipe } from 'it-pipe'
 import { pEvent } from 'p-event'
 import type { Transport } from '@libp2p/interface-transport'
+import { EventEmitter } from '@libp2p/interfaces/events'
 
 const ECHO_PROTOCOL = '/echo/1.0.0'
 
-export default (create: () => Promise<Transport>) => {
+export default (create: () => Promise<Transport>): void => {
   describe('listen', function () {
     this.timeout(20 * 1000)
 
@@ -28,7 +29,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen, check for promise', async () => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       await listener.listen(ma)
@@ -37,7 +40,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen, check for listening event', (done) => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       listener.addEventListener('listening', () => {
@@ -51,10 +56,12 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen, check for the close event', (done) => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
       void listener.listen(ma).then(async () => {
-        listener.addEventListener('close', () => done(), {
+        listener.addEventListener('close', () => { done() }, {
           once: true
         })
 
@@ -64,7 +71,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen in 0.0.0.0', async () => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       await listener.listen(multiaddr('/ip4/0.0.0.0/tcp/48322'))
@@ -73,7 +82,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen in port 0', async () => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       await listener.listen(multiaddr('/ip4/127.0.0.1/tcp/0'))
@@ -82,7 +93,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('listen on IPv6 addr', async () => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       await listener.listen(multiaddr('/ip6/::1/tcp/48322'))
@@ -91,7 +104,9 @@ export default (create: () => Promise<Transport>) => {
 
     it('getAddrs', async () => {
       const listener = wd.createListener({
-        upgrader: mockUpgrader()
+        upgrader: mockUpgrader({
+          events: new EventEmitter()
+        })
       })
 
       await listener.listen(ma)
@@ -112,7 +127,8 @@ export default (create: () => Promise<Transport>) => {
         )
       })
       const upgrader = mockUpgrader({
-        registrar
+        registrar,
+        events: new EventEmitter()
       })
 
       const wd1 = await create()
@@ -160,7 +176,8 @@ export default (create: () => Promise<Transport>) => {
         )
       })
       const upgrader = mockUpgrader({
-        registrar
+        registrar,
+        events: new EventEmitter()
       })
 
       const wd1 = await create()

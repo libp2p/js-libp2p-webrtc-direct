@@ -12,6 +12,7 @@ import { Signal, WebRTCInitiator, WebRTCInitiatorInit, WebRTCReceiverInit, WRTC 
 import { symbol } from '@libp2p/interface-transport'
 import type { CreateListenerOptions, DialOptions, Listener, Transport } from '@libp2p/interface-transport'
 import type { Multiaddr } from '@multiformats/multiaddr'
+import type { Connection } from '@libp2p/interface-connection'
 
 const log = logger('libp2p:webrtc-direct')
 
@@ -36,11 +37,11 @@ class WebRTCDirect implements Transport {
     return true
   }
 
-  get [Symbol.toStringTag] () {
+  get [Symbol.toStringTag] (): string {
     return '@libp2p/webrtc-direct'
   }
 
-  async dial (ma: Multiaddr, options: DialOptions) {
+  async dial (ma: Multiaddr, options: DialOptions): Promise<Connection> {
     const socket = await this._connect(ma, options)
     const maConn = toMultiaddrConnection(socket, { remoteAddr: ma, signal: options.signal })
     log('new outbound connection %s', maConn.remoteAddr)
@@ -49,7 +50,7 @@ class WebRTCDirect implements Transport {
     return conn
   }
 
-  async _connect (ma: Multiaddr, options: DialOptions) {
+  async _connect (ma: Multiaddr, options: DialOptions): Promise<WebRTCInitiator> {
     if (options.signal?.aborted === true) {
       throw new AbortError()
     }
@@ -73,7 +74,7 @@ class WebRTCDirect implements Transport {
 
       const channel = new WebRTCInitiator(channelOptions)
 
-      const onError = (evt: CustomEvent<Error>) => {
+      const onError = (evt: CustomEvent<Error>): void => {
         const err = evt.detail
 
         if (!connected) {
@@ -85,21 +86,21 @@ class WebRTCDirect implements Transport {
         }
       }
 
-      const onReady = () => {
+      const onReady = (): void => {
         connected = true
 
         log('connection opened %s:%s', cOpts.host, cOpts.port)
         done()
       }
 
-      const onAbort = () => {
+      const onAbort = (): void => {
         log.error('connection aborted %s:%s', cOpts.host, cOpts.port)
         void channel.close().finally(() => {
           done(new AbortError())
         })
       }
 
-      const done = (err?: Error) => {
+      const done = (err?: Error): void => {
         channel.removeEventListener('error', onError)
         channel.removeEventListener('ready', onReady)
         options.signal?.removeEventListener('abort', onAbort)
@@ -122,7 +123,7 @@ class WebRTCDirect implements Transport {
       })
       options.signal?.addEventListener('abort', onAbort)
 
-      const onSignal = async (signal: Signal) => {
+      const onSignal = async (signal: Signal): Promise<void> => {
         if (signal.type !== 'offer') {
           // skip candidates, just send the offer as it includes the candidates
           return
@@ -194,7 +195,7 @@ class WebRTCDirect implements Transport {
         return false
       }
 
-      return mafmt.WebRTCDirect.matches(ma.decapsulateCode(CODE_P2P))
+      return mafmt.P2PWebRTCDirect.matches(ma.decapsulateCode(CODE_P2P))
     })
   }
 }
