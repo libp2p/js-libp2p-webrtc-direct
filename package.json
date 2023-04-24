@@ -161,7 +161,7 @@
     "@mapbox/node-pre-gyp": "^1.0.8",
     "aegir": "^37.9.1",
     "it-all": "^2.0.0",
-    "it-pipe": "^2.0.3",
+    "it-pipe": "^3.0.1",
     "it-stream-types": "^1.0.4",
     "multiaddr": "^10.0.0",
     "uint8arraylist": "^2.3.2",
