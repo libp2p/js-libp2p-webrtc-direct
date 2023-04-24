@@ -145,7 +145,7 @@
     "@libp2p/utils": "^3.0.2",
     "@libp2p/webrtc-peer": "^2.0.0",
     "@multiformats/mafmt": "^11.0.3",
-    "@multiformats/multiaddr": "^11.0.0",
+    "@multiformats/multiaddr": "^12.1.2",
     "abortable-iterator": "^4.0.2",
     "err-code": "^3.0.0",
     "multiformats": "^11.0.0",
